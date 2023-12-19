@@ -28,7 +28,6 @@
                 <tr>
                     <th>Category type</th>
                     <th>SubCategory name</th>
-                    <th>SubCategory image</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -37,7 +36,6 @@
                     <tr>
                         <td>${subcategory.categoryName}</td>
                         <td>${subcategory.subCategoryName}</td>
-                        <td><img src="${subcategory.subCategoryImageURL}"></td>
                         <td><form action="controller?action=subcategories&query=delete&subcategoryname=${subcategory.subCategoryName}" method="POST">
                                 <button type="submit">Delete</button>
                             </form>
@@ -51,20 +49,9 @@
             <input type="hidden" name="action" value="subcategories">
             <input type="hidden" name="query" value="add">
             Enter category type: <input type="text" name="categoryname">
-            Enter Subcategory name: <input type="text" name="subcategoryname">            
-            Enter Subcategory image URL: <input type="text" name="subcategoryimageurl">
-            <button type="submit">Submit</button>
-        </form>        
-
-        <h2>Update a Subcategory</h2>
-        <form action='controller' method="POST">
-            <input type="hidden" name="action" value="subcategories">
-            <input type="hidden" name="query" value="update">   
-            Enter category type: <input type="text" name="categoryname">
             Enter Subcategory name: <input type="text" name="subcategoryname">
-            Enter Subcategory image URL: <input type="text" name="subcategoryimageurl">
             <button type="submit">Submit</button>
-        </form>        
+        </form>             
 
         
     </body>

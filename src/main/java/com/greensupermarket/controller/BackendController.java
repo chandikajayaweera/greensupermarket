@@ -16,16 +16,16 @@ public class BackendController extends HttpServlet {
     // Services
     private EmployeeService employeeService;
     private UnitService unitService;
-    private BrandService brandService;
     private CategoryService categoryService;
     private SubCategoryService subCategoryService;
+    private CustomerService customerService;
 
     // Models
-    private Brand brand;
     private Unit unit;
     private Category category;
     private Employee employee;
     private SubCategory subCategory;
+    private Customer customer;
     
 
     // Constructor
@@ -34,16 +34,16 @@ public class BackendController extends HttpServlet {
         // Services
         this.employeeService = new EmployeeService();
         this.unitService = new UnitService();
-        this.brandService = new BrandService();
         this.categoryService = new CategoryService();
         this.subCategoryService = new SubCategoryService();
+        this.customerService = new CustomerService();
         
         // Models
         this.unit = new Unit();
-        this.brand = new Brand();
         this.employee = new Employee();
         this.category = new Category();
         this.subCategory = new SubCategory();
+        this.customer = new Customer();
 
     }
     
@@ -71,10 +71,6 @@ public class BackendController extends HttpServlet {
                 session.setAttribute("units", unitService.getAllUnits());
                 response.sendRedirect("units.jsp");
                 return;
-            case "brands":
-                session.setAttribute("brands", brandService.getAllBrands());
-                response.sendRedirect("brands.jsp");
-                return;
             case "categories":
                 session.setAttribute("categories", categoryService.getAllCategories());
                 response.sendRedirect("categories.jsp");
@@ -82,6 +78,10 @@ public class BackendController extends HttpServlet {
             case "subcategories":
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 response.sendRedirect("subcategories.jsp");
+                return;
+            case "customers":
+                session.setAttribute("customers", customerService.getAllCustomers());
+                response.sendRedirect("customers.jsp");
                 return;
         }
 
@@ -106,14 +106,14 @@ public class BackendController extends HttpServlet {
             case "units":
                 units(session, request, response);
                 break;
-            case "brands":
-                brands(session, request, response);
-                break;
             case "categories":
                 categories(session, request, response);
                 break;
             case "subcategories":
                 subCategories(session, request, response);
+                break;
+            case "customers":
+                customers(session, request, response);
                 break;
         }
     }
@@ -160,45 +160,6 @@ public class BackendController extends HttpServlet {
                 unitService.addUnit(unit);
                 session.setAttribute("units", unitService.getAllUnits());
                 response.sendRedirect("units.jsp");
-                return;
-        }
-    }
-
-    private void brands(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        session.setAttribute("brands", brandService.getAllBrands());
-
-        if (request.getParameter("query") == null) {
-            response.sendRedirect("brands.jsp");
-            return;
-        }
-
-        String query = request.getParameter("query");
-
-        switch (query) {
-            case "delete":
-                brandService.deleteBrand(request.getParameter("brandname"));
-                session.setAttribute("brands", brandService.getAllBrands());
-                response.sendRedirect("brands.jsp");
-                return;
-            
-            case "update":
-                /* Need to edit*/
-                brand.setBrandName(request.getParameter("brandname"));
-                brand.setBrandLogoURL(request.getParameter("brandlogo"));
-                brandService.updateBrand(brand);
-                session.setAttribute("brands", brandService.getAllBrands());
-                response.sendRedirect("brands.jsp");
-                return;
-
-            case "add":
-                /* Need to edit*/
-                brand.setBrandName(request.getParameter("brandname"));
-                try {
-                    brandService.addBrand(brand, request.getPart("brandlogo"));
-                } catch (Exception e) {
-                }
-                session.setAttribute("brands", brandService.getAllBrands());
-                response.sendRedirect("brands.jsp");
                 return;
         }
     }
@@ -254,25 +215,48 @@ public class BackendController extends HttpServlet {
             case "add":
                 subCategory.setCategoryName(request.getParameter("categoryname"));
                 subCategory.setSubCategoryName(request.getParameter("subcategoryname"));
-                subCategory.setSubCategoryImageURL(request.getParameter("subcategoryimageurl"));
                 subCategoryService.addSubCategory(subCategory);
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 response.sendRedirect("subcategories.jsp");
-                return;
-            
-            case "update":
-                subCategory.setCategoryName(request.getParameter("categoryname"));
-                subCategory.setSubCategoryName(request.getParameter("subcategoryname"));
-                subCategory.setSubCategoryImageURL(request.getParameter("subcategoryimageurl"));
-                subCategoryService.updateSubCategory(subCategory);
-                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
-                response.sendRedirect("subcategories.jsp");
-                return;                  
+                return;              
                 
             case "delete":
                 subCategoryService.deleteSubCategory(request.getParameter("subcategoryname"));
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 response.sendRedirect("subcategories.jsp");
+                return;                
+        }
+    }
+    
+    private void customers(HttpSession session, HttpServletRequest request, HttpServletResponse response)throws IOException{
+        session.setAttribute("customers", customerService.getAllCustomers());
+        
+        if (request.getParameter("query") == null) {
+            response.sendRedirect("customers.jsp");
+            return;
+        }
+        
+        String query = request.getParameter("query");
+        
+        switch(query){
+            case "add":
+                customer.setCustomerFname(request.getParameter("customerfname"));
+                customer.setCustomerLname(request.getParameter("customerlname"));
+                customer.setCustomerEmail(request.getParameter("customeremail"));
+                customer.setCustomerPnumber(request.getParameter("customerpnumber"));
+                customer.setCustomerPasswordHash(request.getParameter("customerpassword"));
+                customerService.addCustomer(customer);
+                session.setAttribute("customers", customerService.getAllCustomers());
+                response.sendRedirect("customers.jsp");
+                return;
+            
+            case "update":
+                return;
+                
+            case "delete":
+                customerService.deleteCustomer(Integer.parseInt(request.getParameter("customerid")));
+                session.setAttribute("customers", customerService.getAllCustomers());
+                response.sendRedirect("customers.jsp");
                 return;                
         }
     }

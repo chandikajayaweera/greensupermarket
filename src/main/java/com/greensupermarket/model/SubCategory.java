@@ -4,17 +4,15 @@ public class SubCategory {
 
     private String categoryName;
     private String subCategoryName;
-    private String subCategoryImageURL;
 
     // Default constructor
     public SubCategory() {
     }
 
     // Parameterized constructor
-    public SubCategory(String categoryName, String subCategoryName, String subCategoryImageURL) {
+    public SubCategory(String categoryName, String subCategoryName) {
         this.categoryName = categoryName;
         this.subCategoryName = subCategoryName;
-        this.subCategoryImageURL = subCategoryImageURL;
     }
 
     // Getters and setters
@@ -34,13 +32,6 @@ public class SubCategory {
         this.subCategoryName = subCategoryName;
     }
 
-    public String getSubCategoryImageURL() {
-        return subCategoryImageURL;
-    }
-
-    public void setSubCategoryImageURL(String subCategoryImageURL) {
-        this.subCategoryImageURL = subCategoryImageURL;
-    }
 
     // toString method for debugging or logging
     @Override
@@ -48,7 +39,6 @@ public class SubCategory {
         return "SubCategory{" +
                 "categoryName='" + categoryName + '\'' +
                 ", subCategoryName='" + subCategoryName + '\'' +
-                ", subCategoryImageURL='" + subCategoryImageURL + '\'' +
                 '}';
     }
 }

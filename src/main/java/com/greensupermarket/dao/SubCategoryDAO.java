@@ -21,31 +21,14 @@ public class SubCategoryDAO {
     // Add subcategory
     public boolean addSubCategory(SubCategory subCategory) {
         try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
-                "INSERT INTO SubCategory (CategoryName, SubCategoryName, SubCategoryImageURL) VALUES (?, ?, ?)")) {
+                "INSERT INTO SubCategory (CategoryName, SubCategoryName) VALUES (?, ?)")) {
 
             preparedStatement.setString(1, subCategory.getCategoryName());
             preparedStatement.setString(2, subCategory.getSubCategoryName());
-            preparedStatement.setString(3, subCategory.getSubCategoryImageURL());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
 
-        } catch (SQLException e) {
-            handleSQLException(e);
-            return false;
-        }
-    }
-
-    // Update subcategory
-    public boolean updateSubCategory(SubCategory subCategory) {
-        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
-                "UPDATE SubCategory SET SubCategoryImageURL=? WHERE SubCategoryName=?")) {
-
-            preparedStatement.setString(1, subCategory.getSubCategoryImageURL());
-            preparedStatement.setString(2, subCategory.getSubCategoryName());
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0;
         } catch (SQLException e) {
             handleSQLException(e);
             return false;
@@ -109,7 +92,6 @@ public class SubCategoryDAO {
         SubCategory subCategory = new SubCategory();
         subCategory.setCategoryName(resultSet.getString("CategoryName"));
         subCategory.setSubCategoryName(resultSet.getString("SubCategoryName"));
-        subCategory.setSubCategoryImageURL(resultSet.getString("SubCategoryImageURL"));
         return subCategory;
     }
 

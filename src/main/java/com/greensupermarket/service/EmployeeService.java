@@ -55,7 +55,7 @@ public class EmployeeService {
         return false;
     }
     
-    // Get Employee by name
+    // Get Employee by email
     public Employee getEmployeeByEmail(String employeeEmail){
         return employeeDAO.getEmployeeByEmail(employeeEmail);
     }

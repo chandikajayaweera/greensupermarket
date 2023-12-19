@@ -32,14 +32,6 @@ public class SubCategoryService {
         return false;
     }
     
-    // Update subcategory
-    public boolean updateSubCategory(SubCategory subCategory){
-        if(subCategoryDao.getSubCategoryByName(subCategory.getSubCategoryName()) != null){
-            return subCategoryDao.updateSubCategory(subCategory);
-        }
-        return false;
-    }
-    
     // Get all subcategories
     public List<SubCategory> getAllSubCategories(){
         return subCategoryDao.getAllSubCategories();

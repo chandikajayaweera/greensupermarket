@@ -22,19 +22,16 @@ public class ProductDAO {
     public boolean addProduct(Product product) {
         try (Connection con = connectionManager.getConnection();
              PreparedStatement preparedStatement = con.prepareStatement(
-                     "INSERT INTO Product (UnitName, BrandName, VariationValueName, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice, ProductIsDiscounted, ProductDiscountedPrice, ProductIsActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                     "INSERT INTO Product (UnitName, BrandName, ProductStock, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, product.getUnitName());
             preparedStatement.setString(2, product.getBrandName());
-            preparedStatement.setString(3, product.getVariationValueName());
+            preparedStatement.setInt(3, product.getProductStock());
             preparedStatement.setString(4, product.getSubCategoryName());
             preparedStatement.setString(5, product.getProductSKU());
             preparedStatement.setString(6, product.getProductName());
             preparedStatement.setString(7, product.getProductDescription());
             preparedStatement.setDouble(8, product.getProductUnitPrice());
-            preparedStatement.setBoolean(9, product.isProductIsDiscounted());
-            preparedStatement.setDouble(10, product.getProductDiscountedPrice());
-            preparedStatement.setBoolean(11, product.isProductIsActive());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -69,20 +66,17 @@ public class ProductDAO {
     public boolean updateProduct(Product product) {
         try (Connection con = connectionManager.getConnection();
              PreparedStatement preparedStatement = con.prepareStatement(
-                     "UPDATE Product SET UnitName=?, BrandName=?, VariationValueName=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=?, ProductIsDiscounted=?, ProductDiscountedPrice=?, ProductIsActive=? WHERE ProductID=?")) {
+                     "UPDATE Product SET UnitName=?, BrandName=?, ProductStock=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=? WHERE ProductID=?")) {
 
             preparedStatement.setString(1, product.getUnitName());
             preparedStatement.setString(2, product.getBrandName());
-            preparedStatement.setString(3, product.getVariationValueName());
+            preparedStatement.setInt(3, product.getProductStock());
             preparedStatement.setString(4, product.getSubCategoryName());
             preparedStatement.setString(5, product.getProductSKU());
             preparedStatement.setString(6, product.getProductName());
             preparedStatement.setString(7, product.getProductDescription());
             preparedStatement.setDouble(8, product.getProductUnitPrice());
-            preparedStatement.setBoolean(9, product.isProductIsDiscounted());
-            preparedStatement.setDouble(10, product.getProductDiscountedPrice());
-            preparedStatement.setBoolean(11, product.isProductIsActive());
-            preparedStatement.setInt(12, product.getProductID());
+            preparedStatement.setInt(9, product.getProductID());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -135,15 +129,12 @@ public class ProductDAO {
         product.setProductID(resultSet.getInt("ProductID"));
         product.setUnitName(resultSet.getString("UnitName"));
         product.setBrandName(resultSet.getString("BrandName"));
-        product.setVariationValueName(resultSet.getString("VariationValueName"));
+        product.setProductStock(resultSet.getInt("ProductStock"));
         product.setSubCategoryName(resultSet.getString("SubCategoryName"));
         product.setProductSKU(resultSet.getString("ProductSKU"));
         product.setProductName(resultSet.getString("ProductName"));
         product.setProductDescription(resultSet.getString("ProductDescription"));
         product.setProductUnitPrice(resultSet.getDouble("ProductUnitPrice"));
-        product.setProductIsDiscounted(resultSet.getBoolean("ProductIsDiscounted"));
-        product.setProductDiscountedPrice(resultSet.getDouble("ProductDiscountedPrice"));
-        product.setProductIsActive(resultSet.getBoolean("ProductIsActive"));
         return product;
     }
 

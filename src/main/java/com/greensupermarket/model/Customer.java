@@ -81,7 +81,6 @@ public class Customer {
                 ", customerLname='" + customerLname + '\'' +
                 ", customerEmail='" + customerEmail + '\'' +
                 ", customerPnumber='" + customerPnumber + '\'' +
-                ", customerPasswordHash='" + customerPasswordHash + '\'' +
                 '}';
     }
 }

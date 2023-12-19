@@ -35,18 +35,6 @@
                 <td><button onclick="location.href='controller?action=units'">View all</button></td>
             </tr>
             <tr>
-                <th>Brands</th>
-                <td><button onclick="location.href='controller?action=brands'">View all</button></td>
-            </tr>
-            <tr>
-                <th>Variations</th>
-                <td><button onclick="location.href='controller?action=variations'">View all</button></td>
-            </tr>
-            <tr>
-                <th>Variation Values</th>
-                <td><button onclick="location.href='controller?action=variationvalues'">View all</button></td>
-            </tr>
-            <tr>
                 <th>Categories</th>
                 <td><button onclick="location.href='controller?action=categories'">View all</button></td>
             </tr>
@@ -54,6 +42,10 @@
                 <th>Sub-Categories</th>
                 <td><button onclick="location.href='controller?action=subcategories'">View all</button></td>
             </tr>
+            <tr>
+                <th>Customers</th>
+                <td><button onclick="location.href='controller?action=customers'">View all</button></td>
+            </tr>            
         </table>
     </body>
 </html>
