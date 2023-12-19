@@ -1,0 +1,34 @@
+/*
+ * (*outer|center|inner)
+ */
+[inner ], [inner ] * { outline-offset: -0.3750rem !important; }
+[center], [center] * { outline-offset: -0.1875rem !important; }
+[outer ], [outer ] * { outline-offset:  0.0000rem !important; }
+
+/*
+ * debug:(*|outline|\*)
+ */
+[debug             ] [outline],
+[debug\:outline    ] [outline],
+[debug\:\*         ] *        ,
+[debug\:one        ] {
+	outline: 0.3750rem solid #00AAFF3F !important;
+}
+
+/*
+ * line-height
+ */
+[debug             ] [line-height],
+[debug\:line-height] [line-height],
+[debug\:\*         ] [line-height] {
+	background-image: linear-gradient(
+		#00AAFF7F   1px,
+		transparent 0,
+		transparent calc(var(--lh)*1em/2),
+		#00AAFF3F   calc(var(--lh)*1em/2),
+		transparent calc(var(--lh)*1em/2 + 0.5px),
+		transparent calc(var(--lh)*1em)
+	) !important;
+	background-size: 100% calc(var(--lh)*1em) !important;
+	box-shadow:      0 1px #00AAFFAA          !important;
+}
