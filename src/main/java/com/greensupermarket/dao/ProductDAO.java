@@ -22,7 +22,7 @@ public class ProductDAO {
     public boolean addProduct(Product product) {
         try (Connection con = connectionManager.getConnection();
              PreparedStatement preparedStatement = con.prepareStatement(
-                     "INSERT INTO Product (UnitName, BrandName, ProductStock, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+                     "INSERT INTO Product (UnitName, BrandName, ProductStock, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice, ProductImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, product.getUnitName());
             preparedStatement.setString(2, product.getBrandName());
@@ -32,6 +32,7 @@ public class ProductDAO {
             preparedStatement.setString(6, product.getProductName());
             preparedStatement.setString(7, product.getProductDescription());
             preparedStatement.setDouble(8, product.getProductUnitPrice());
+            preparedStatement.setString(9, product.getProductImageURL());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -66,7 +67,7 @@ public class ProductDAO {
     public boolean updateProduct(Product product) {
         try (Connection con = connectionManager.getConnection();
              PreparedStatement preparedStatement = con.prepareStatement(
-                     "UPDATE Product SET UnitName=?, BrandName=?, ProductStock=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=? WHERE ProductID=?")) {
+                     "UPDATE Product SET UnitName=?, BrandName=?, ProductStock=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=?, ProductImageURL=? WHERE ProductID=?")) {
 
             preparedStatement.setString(1, product.getUnitName());
             preparedStatement.setString(2, product.getBrandName());
@@ -76,7 +77,8 @@ public class ProductDAO {
             preparedStatement.setString(6, product.getProductName());
             preparedStatement.setString(7, product.getProductDescription());
             preparedStatement.setDouble(8, product.getProductUnitPrice());
-            preparedStatement.setInt(9, product.getProductID());
+            preparedStatement.setString(9, product.getProductImageURL());
+            preparedStatement.setInt(10, product.getProductID());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -135,6 +137,7 @@ public class ProductDAO {
         product.setProductName(resultSet.getString("ProductName"));
         product.setProductDescription(resultSet.getString("ProductDescription"));
         product.setProductUnitPrice(resultSet.getDouble("ProductUnitPrice"));
+        product.setProductImageURL(resultSet.getString("ProductImageURL"));
         return product;
     }
 
@@ -143,4 +146,42 @@ public class ProductDAO {
         // Log or handle the exception as needed
         e.printStackTrace();
     }
+    
+    // Get product by ProductSKU
+    public Product getProductBySKU(String productSKU){
+        try (Connection con = connectionManager.getConnection();
+            PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductSKU =?")) {
+            
+            preparedStatement.setString(1, productSKU);
+            
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    return mapResultSetToProduct(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+        return null;
+    }
+    
+    // Get product by ProductName
+    public Product getProductByName(String productName){
+        try (Connection con = connectionManager.getConnection();
+            PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductName =?")) {
+            
+            preparedStatement.setString(1, productName);
+            
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    return mapResultSetToProduct(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+        return null;        
+    }
+    
+    
 }

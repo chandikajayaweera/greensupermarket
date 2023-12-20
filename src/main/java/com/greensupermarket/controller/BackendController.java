@@ -2,14 +2,17 @@ package com.greensupermarket.controller;
 
 import com.greensupermarket.service.*;
 import com.greensupermarket.model.*;
-
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import java.io.IOException;
 
+@MultipartConfig
 @WebServlet(name = "BackendController", urlPatterns = {"/backend/controller"})
 public class BackendController extends HttpServlet {
 
@@ -19,6 +22,7 @@ public class BackendController extends HttpServlet {
     private CategoryService categoryService;
     private SubCategoryService subCategoryService;
     private CustomerService customerService;
+    private ProductService productService;
 
     // Models
     private Unit unit;
@@ -26,6 +30,7 @@ public class BackendController extends HttpServlet {
     private Employee employee;
     private SubCategory subCategory;
     private Customer customer;
+    private Product product;
     
 
     // Constructor
@@ -37,6 +42,7 @@ public class BackendController extends HttpServlet {
         this.categoryService = new CategoryService();
         this.subCategoryService = new SubCategoryService();
         this.customerService = new CustomerService();
+        this.productService = new ProductService();
         
         // Models
         this.unit = new Unit();
@@ -44,6 +50,7 @@ public class BackendController extends HttpServlet {
         this.category = new Category();
         this.subCategory = new SubCategory();
         this.customer = new Customer();
+        this.product = new Product();
 
     }
     
@@ -76,6 +83,7 @@ public class BackendController extends HttpServlet {
                 response.sendRedirect("categories.jsp");
                 return;
             case "subcategories":
+                session.setAttribute("categories", categoryService.getAllCategories());
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 response.sendRedirect("subcategories.jsp");
                 return;
@@ -83,11 +91,17 @@ public class BackendController extends HttpServlet {
                 session.setAttribute("customers", customerService.getAllCustomers());
                 response.sendRedirect("customers.jsp");
                 return;
+            case "products":
+                session.setAttribute("units", unitService.getAllUnits());
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                session.setAttribute("products", productService.getAllProducts());
+                response.sendRedirect("products.jsp");
+                return;
         }
 
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         
         boolean isLogged = authenticateSession(session, request, response);
@@ -114,6 +128,9 @@ public class BackendController extends HttpServlet {
                 break;
             case "customers":
                 customers(session, request, response);
+                break;
+            case "products":
+                products(session, request, response);
                 break;
         }
     }
@@ -164,7 +181,7 @@ public class BackendController extends HttpServlet {
         }
     }
 
-    private void categories(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void categories(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         session.setAttribute("categories", categoryService.getAllCategories());
 
         if (request.getParameter("query") == null) {
@@ -176,19 +193,17 @@ public class BackendController extends HttpServlet {
 
         switch (query) {
             case "add":
-                /* Need to edit*/
+                Part categoryImage = request.getPart("categoryimage");      
                 category.setCategoryName(request.getParameter("categoryname"));
-                category.setCategoryImageURL(request.getParameter("categoryimageurl"));
-                categoryService.addCategory(category);
+                categoryService.addCategory(category, categoryImage, request);
                 session.setAttribute("categories", categoryService.getAllCategories());
                 response.sendRedirect("categories.jsp");
                 return;
                 
             case "update":
-                /* Need to edit*/
+                categoryImage = request.getPart("categoryimage");      
                 category.setCategoryName(request.getParameter("categoryname"));
-                category.setCategoryImageURL(request.getParameter("categoryimageurl"));
-                categoryService.updateCategory(category);
+                categoryService.updateCategory(category, categoryImage, request);
                 session.setAttribute("categories", categoryService.getAllCategories());
                 response.sendRedirect("categories.jsp");
                 return;                
@@ -216,12 +231,14 @@ public class BackendController extends HttpServlet {
                 subCategory.setCategoryName(request.getParameter("categoryname"));
                 subCategory.setSubCategoryName(request.getParameter("subcategoryname"));
                 subCategoryService.addSubCategory(subCategory);
+                session.setAttribute("categories", categoryService.getAllCategories());
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 response.sendRedirect("subcategories.jsp");
                 return;              
                 
             case "delete":
                 subCategoryService.deleteSubCategory(request.getParameter("subcategoryname"));
+                session.setAttribute("categories", categoryService.getAllCategories());
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 response.sendRedirect("subcategories.jsp");
                 return;                
@@ -258,6 +275,46 @@ public class BackendController extends HttpServlet {
                 session.setAttribute("customers", customerService.getAllCustomers());
                 response.sendRedirect("customers.jsp");
                 return;                
+        }
+    }
+    
+    private void products(HttpSession session, HttpServletRequest request, HttpServletResponse response)throws IOException, ServletException{
+                session.setAttribute("units", unitService.getAllUnits());
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                session.setAttribute("products", productService.getAllProducts());
+        
+        if (request.getParameter("query") == null) {
+            response.sendRedirect("products.jsp");
+            return;
+        }
+        
+        String query = request.getParameter("query");
+    
+        switch(query){
+            case "add":
+                Part productImage = request.getPart("productimage");
+                product.setProductName(request.getParameter("productname"));
+                product.setProductSKU(request.getParameter("productsku"));
+                product.setBrandName(request.getParameter("brandname"));
+                product.setUnitName(request.getParameter("unitname"));
+                product.setSubCategoryName(request.getParameter("subcategoryname"));
+                product.setProductDescription(request.getParameter("productdescription"));
+                product.setProductUnitPrice(Double.parseDouble(request.getParameter("productunitprice")));
+                product.setProductStock(Integer.parseInt(request.getParameter("productstock")));
+                productService.addProduct(product, productImage, request);
+                session.setAttribute("units", unitService.getAllUnits());
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                session.setAttribute("products", productService.getAllProducts());
+                response.sendRedirect("products.jsp");
+                return;
+                
+            case "delete":
+                productService.deleteProduct(Integer.parseInt(request.getParameter("productid")));
+                session.setAttribute("units", unitService.getAllUnits());
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                session.setAttribute("products", productService.getAllProducts());
+                response.sendRedirect("products.jsp");
+                return;
         }
     }
 }

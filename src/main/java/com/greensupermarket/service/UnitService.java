@@ -29,7 +29,6 @@ public class UnitService {
         return false; // Handle error
     }   
     
-    
     //Get all units
     public List<Unit> getAllUnits(){
         return unitDao.getAllUnits();

@@ -11,6 +11,7 @@ public class Product {
     private String productDescription;
     private double productUnitPrice;
     private int productStock;
+    private String productImageURL;
 
     // Default constructor
     public Product() {
@@ -26,7 +27,8 @@ public class Product {
             String productName,
             String productDescription,
             double productUnitPrice,
-            int productStock
+            int productStock,
+            String productImageURL
             
     ) {
         this.productID = productID;
@@ -38,6 +40,7 @@ public class Product {
         this.productDescription = productDescription;
         this.productUnitPrice = productUnitPrice;
         this.productStock = productStock;
+        this.productImageURL = productImageURL;
     }
 
     // Getters and setters
@@ -112,6 +115,14 @@ public class Product {
     public void setProductStock(int productStock){
         this.productStock = productStock;
     }
+    
+    public String getProductImageURL(){
+        return productImageURL;
+    }
+    
+    public void setProductImageURL(String productImageURL){
+        this.productImageURL = productImageURL;
+    }
 
     // toString method for debugging or logging
     @Override
@@ -124,8 +135,9 @@ public class Product {
                 ", productSKU='" + productSKU + '\'' +
                 ", productName='" + productName + '\'' +
                 ", productDescription='" + productDescription + '\'' +
-                ", productUnitPrice=" + productUnitPrice +
-                ", productStock=" + productStock +                
+                ", productUnitPrice=" + productUnitPrice + '\'' +
+                ", productStock=" + productStock + '\'' +
+                ", productImageURL=" + productImageURL +
                 '}';
     }
 }

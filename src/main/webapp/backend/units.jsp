@@ -6,6 +6,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="../resources/css/backend.css"/>
         <title>Unit Page</title>
     </head>
     <body>
@@ -21,40 +22,66 @@
             response.sendRedirect("login.jsp");
             }
         %>
-        <h1>Unit Page</h1>
+        <div id="container">
+            <div id="sidebar">
+                <ul>
+                    <li><font size="30"><a href="dashboard.jsp"><b>Dash</b></a></font></li>
+                    <li><a href="controller?action=units">Units</a></li>
+                    <li><a href="controller?action=categories">Categories</a></li>
+                    <li><a href="controller?action=subcategories">Sub Categories</a></li>
+                    <li><a href="controller?action=products">Products</a></li>
+                    <li><a href="controller?action=customers">Customers</a></li>
+                    <li><a href="controller?action=customerorders">Customer Orders</a></li>
+                    <li><a href="controller?action=customerfeedback">Customer Feedback</li>
+                    <li><a href="controller?action=employees">Employees</a></li>
+                </ul>
+            </div>
+            <div id="content">
+                <h1>Unit Page</h1>
 
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Unit Name</th>
-                    <th>Unit Abbreviation</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="unit" items="${units}">
-                    <tr>
-                        <td>${unit.unitName}</td>
-                        <td>${unit.unitAbbreviation}</td>
-                        <td><form action="controller?action=units&query=delete&unitname=${unit.unitName}" method="POST">
-                                <button type="submit">Delete</button>
-                            </form>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Unit Name</th>
+                            <th>Unit Abbreviation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="unit" items="${units}">
+                            <tr>
+                                <td>${unit.unitName}</td>
+                                <td>${unit.unitAbbreviation}</td>
+                                <td><form action="controller?action=units&query=delete&unitname=${unit.unitName}" method="POST">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
 
-        <br><br>
+                <br><br>
 
-        <h2>Add new unit</h2>
-        <form action='controller' method="POST">
-            <input type="hidden" name="action" value="units">
-            <input type="hidden" name="query" value="add">
-            Enter unit name: <input type="text" name="unitname">
-            Enter unit abbreviation: <input type="text" name="unitabbreviation">
-            <button type="submit">Submit</button>
-        </form>
-        
+                <h2>Add new unit</h2>
+                <form action='controller' method="POST">
+                    <input type="hidden" name="action" value="units">
+                    <input type="hidden" name="query" value="add">
+                    <table>
+                        <tr>
+                            <td>Enter unit name:</td>
+                            <td><input type="text" name="unitname"></td>
+                        </tr>
+                        <tr>
+                            <td>Enter unit abbreviation:</td>
+                            <td><input type="text" name="unitabbreviation"></td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit">Submit</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
 
     </body>
 </html>
