@@ -1,11 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="../resources/css/backend.css"/>
-        <title>Employee Dashboard</title>
+        <title>Customer dashboard</title>
     </head>
     <body>
         <%
@@ -16,7 +15,7 @@
             //For proxy servers
             response.setHeader("Expires", "0"); 
 	        
-            if(session.getAttribute("employee") == null){
+            if(session.getAttribute("customer") == null){
             response.sendRedirect("login.jsp");
             }
         %>
@@ -30,13 +29,13 @@
                     <li><a href="controller?action=products">Products</a></li>
                     <li><a href="controller?action=customers">Customers</a></li>
                     <li><a href="controller?action=customerorders">Customer Orders</a></li>
-                    <li><a href="controller?action=customerfeedback">Customer Feedback</a></li>
+                    <li><a href="controller?action=customerfeedback">Customer Feedback</li>
                     <li><a href="controller?action=employees">Employees</a></li>
                 </ul>
             </div>
             <div id="content">
                 <!-- Your main content goes here -->
-                <h1>Employee: ${employee.employeeFname} ${employee.employeeLname}<button onclick="location.href = 'controller?action=logout'">Logout</button></h1>
+                <h1>Employee: ${customer.customerFname} ${customer.customerLname}<button onclick="location.href = 'logincontroller?action=logout'">Logout</button></h1>
                 <p>This is the main content area.</p>
             </div>
         </div>

@@ -123,6 +123,14 @@ public class ProductService {
         return false;
     }
     
+    //Get product by ID
+    public Product getProductByID(int productID){
+        if(productDao.getProductById(productID) != null){
+            return productDao.getProductById(productID);
+        }
+        return null;
+    }
+    
     // Get product by name
     public Product getProductByName(String productName){
         if(productDao.getProductByName(productName) != null){

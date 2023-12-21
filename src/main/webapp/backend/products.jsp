@@ -38,7 +38,7 @@
             </div>
             <div id="content">
                 <h1>Product page</h1>
-                
+
                 <table border="1">
                     <thead>
                         <tr>
@@ -74,8 +74,8 @@
                         </c:forEach>
                     </tbody>
                 </table>
-                
-                <h2>Add new Category</h2>
+
+                <h2>Add new product</h2>
                 <form action='controller' method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="products">
                     <input type="hidden" name="query" value="add">
@@ -132,8 +132,8 @@
                             <td><button type="submit">Submit</button></td>
                         </tr>
                     </table>
-                </form>                   
-                
+                </form>  
+
             </div>
         </div>
     </body>

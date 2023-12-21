@@ -90,7 +90,7 @@
                         </tr>
                         <tr>
                             <td>Phone number:</td>
-                            <td><input type="text" name="customerpnumber"></td>
+                            <td><input type="tel" name="customerpnumber"></td>
                         </tr>
                         <tr>
                             <td>Password:</td>

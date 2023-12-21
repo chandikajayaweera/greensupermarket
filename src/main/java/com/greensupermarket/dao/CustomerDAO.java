@@ -119,7 +119,6 @@ public class CustomerDAO {
         customer.setCustomerLname(resultSet.getString("CustomerLname"));
         customer.setCustomerEmail(resultSet.getString("CustomerEmail"));
         customer.setCustomerPnumber(resultSet.getString("CustomerPnumber"));
-        customer.setCustomerPasswordHash(resultSet.getString("CustomerPasswordHash"));
         return customer;
     }
 
