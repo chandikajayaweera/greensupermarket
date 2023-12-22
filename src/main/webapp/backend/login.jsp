@@ -17,6 +17,7 @@
 
         <h1>Employee Login Portal</h1>
         <form action="login" method="POST">
+            <input type="hidden" name="action" value="login">
             <table>
                 <tr>
                     <td>Employee Email:</td>

@@ -7,7 +7,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="../resources/css/backend.css"/>
-        <title>Unit Page</title>
+        <title>Customer Feedback Page</title>
     </head>
     <body>
         <%
@@ -37,53 +37,35 @@
                 </ul>
             </div>
             <div id="content">
-                <h1>Unit Page</h1>
-
+                <!-- Your main content goes here -->
+                <h1>Customer Feedback</h1>
+                
                 <table border="1">
                     <thead>
                         <tr>
-                            <th>Unit Name</th>
-                            <th>Unit Abbreviation</th>
-                            <th>Action</th>
+                            <th>Feedback ID</th>
+                            <th>Customer ID</th>
+                            <th>Date</th>
+                            <th>Rate</th>
+                            <th>Message</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="unit" items="${units}">
+                        <c:forEach var="eachfeedback" items="${feedback}">
                             <tr>
-                                <td>${unit.unitName}</td>
-                                <td>${unit.unitAbbreviation}</td>
-                                <td>
-                                    <form action="controller?action=units&query=delete&unitname=${unit.unitName}" method="POST">
-                                        <button type="submit">Delete</button>
-                                    </form>
-                                </td>
+                                <td>${eachfeedback.feedbackID}</td>
+                                <td>${eachfeedback.customerID}</td>
+                                <td>${eachfeedback.feedbackDate}</td>
+                                <td>${eachfeedback.feedbackRating}</td>
+                                <td>${eachfeedback.feedbackMessage}</td>
                             </tr>
                         </c:forEach>
                     </tbody>
-                </table>
-
-                <br><br>
-
-                <h2>Add new unit</h2>
-                <form action='controller' method="POST">
-                    <input type="hidden" name="action" value="units">
-                    <input type="hidden" name="query" value="add">
-                    <table>
-                        <tr>
-                            <td>Enter unit name:</td>
-                            <td><input type="text" name="unitname"></td>
-                        </tr>
-                        <tr>
-                            <td>Enter unit abbreviation:</td>
-                            <td><input type="text" name="unitabbreviation"></td>
-                        </tr>
-                        <tr>
-                            <td><button type="submit">Submit</button></td>
-                        </tr>
-                    </table>
-                </form>
+                </table>  
+                
+                
+                
             </div>
         </div>
-
     </body>
 </html>

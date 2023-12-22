@@ -19,7 +19,7 @@
             response.setHeader("Expires", "0"); 
 	        
             if(session.getAttribute("employee") == null){
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("login?action=logout");
             }
         %>
 
@@ -33,7 +33,7 @@
                     <li><a href="controller?action=products">Products</a></li>
                     <li><a href="controller?action=customers">Customers</a></li>
                     <li><a href="controller?action=customerorders">Customer Orders</a></li>
-                    <li><a href="controller?action=customerfeedback">Customer Feedback</li>
+                    <li><a href="controller?action=customerfeedback">Customer Feedback</a></li>
                     <li><a href="controller?action=employees">Employees</a></li>
                 </ul>
             </div>

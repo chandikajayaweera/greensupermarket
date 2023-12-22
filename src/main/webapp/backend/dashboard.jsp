@@ -17,7 +17,7 @@
             response.setHeader("Expires", "0"); 
 	        
             if(session.getAttribute("employee") == null){
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("login?action=logout");
             }
         %>
         <div id="container">
@@ -36,7 +36,7 @@
             </div>
             <div id="content">
                 <!-- Your main content goes here -->
-                <h1>Employee: ${employee.employeeFname} ${employee.employeeLname}<button onclick="location.href = 'controller?action=logout'">Logout</button></h1>
+                <h1>Employee: ${employee.employeeFname} ${employee.employeeLname}<button onclick="location.href = 'login?action=logout'">Logout</button></h1>
                 <p>This is the main content area.</p>
             </div>
         </div>

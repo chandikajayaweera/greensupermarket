@@ -16,21 +16,14 @@
             response.setHeader("Expires", "0"); 
 	        
             if(session.getAttribute("customer") == null){
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("logincontroller?action=logout");
             }
         %>
         <div id="container">
             <div id="sidebar">
                 <ul>
                     <li><font size="30"><a href="dashboard.jsp"><b>Dash</b></a></font></li>
-                    <li><a href="controller?action=units">Units</a></li>
-                    <li><a href="controller?action=categories">Categories</a></li>
-                    <li><a href="controller?action=subcategories">Sub Categories</a></li>
-                    <li><a href="controller?action=products">Products</a></li>
-                    <li><a href="controller?action=customers">Customers</a></li>
-                    <li><a href="controller?action=customerorders">Customer Orders</a></li>
-                    <li><a href="controller?action=customerfeedback">Customer Feedback</li>
-                    <li><a href="controller?action=employees">Employees</a></li>
+                    <li><a href="controller?action=feedback">Feedback</a></li>
                 </ul>
             </div>
             <div id="content">

@@ -12,16 +12,58 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginController", urlPatterns = {"/backend/login"})
 public class LoginController extends HttpServlet {
-    
+
     private EmployeeService employeeService;
-    
-    public LoginController(){
+
+    public LoginController() {
         this.employeeService = new EmployeeService();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        
+        if (request.getParameter("action") == null) {
+            logout(session, response);
+            return;
+        }
+        
+        String action = request.getParameter("action");
+
+        switch (action) {
+            case "logout":
+                logout(session, response);
+                return;
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        
+        if (request.getParameter("action") == null) {
+            logout(session, response);
+            return;
+        }
+        
+        String action = request.getParameter("action");
+
+        switch (action) {
+            case "logout":
+                logout(session, response);
+                return;
+            case "login":
+                login(session, request, response);
+                return;
+        }
+        
+    }
+
+    private void logout(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
+        session.removeAttribute("employee");
+        session.invalidate();
+        response.sendRedirect("login.jsp");
+    }
+    
+    private void login(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         if (employeeService.authenticateEmployee(email, password)) {
@@ -29,7 +71,7 @@ public class LoginController extends HttpServlet {
             response.sendRedirect("dashboard.jsp");
             return;
         }
-        response.sendRedirect("login.jsp");        
+        response.sendRedirect("login.jsp");
     }
 
 }
