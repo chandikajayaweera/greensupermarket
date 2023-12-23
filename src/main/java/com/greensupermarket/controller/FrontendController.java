@@ -77,7 +77,7 @@ public class FrontendController extends HttpServlet {
         session.setAttribute("categories", categoryService.getAllCategories());
 
         if ((request.getParameter("categoryname") == null && request.getParameter("subcategoryname") == null) || "all".equals(request.getParameter("categoryname"))) {
-            session.setAttribute("categoryname", "All Products");
+            session.setAttribute("categoryname", "All");
             session.setAttribute("products", productService.getAllProducts());
             response.sendRedirect("products.jsp");
             return;
