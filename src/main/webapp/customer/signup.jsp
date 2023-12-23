@@ -1,9 +1,9 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="../resources/css/bulma.min.css"/>
         <title>Sign up page</title>
     </head>
     <body>
@@ -15,8 +15,9 @@
             //For proxy servers
             response.setHeader("Expires", "0"); 
         %>
+        <jsp:include page="../template/frontend/navbar.jsp"/>
         <h1>Customer sign up page</h1>
-        <form action="logincontroller" method="POST">
+        <form action="login" method="POST">
             <input type="hidden" name="action" value="signup">
             <table>
                 <tr>

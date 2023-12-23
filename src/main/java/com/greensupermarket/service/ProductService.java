@@ -151,4 +151,9 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productDao.getAllProducts();
     }
+    
+    // Get products by subcategory name
+    public List<Product> getProductsBySubCategoryName(String subCategoryName){
+        return productDao.getProductsBySubCategoryName(subCategoryName);
+    }
 }

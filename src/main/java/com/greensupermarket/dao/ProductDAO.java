@@ -20,9 +20,8 @@ public class ProductDAO {
 
     // Create a new product
     public boolean addProduct(Product product) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "INSERT INTO Product (UnitName, BrandName, ProductStock, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice, ProductImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "INSERT INTO Product (UnitName, BrandName, ProductStock, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice, ProductImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, product.getUnitName());
             preparedStatement.setString(2, product.getBrandName());
@@ -45,8 +44,7 @@ public class ProductDAO {
 
     // Retrieve product by ID
     public Product getProductById(int productID) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductID = ?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductID = ?")) {
 
             preparedStatement.setInt(1, productID);
 
@@ -65,9 +63,8 @@ public class ProductDAO {
 
     // Update product
     public boolean updateProduct(Product product) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "UPDATE Product SET UnitName=?, BrandName=?, ProductStock=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=?, ProductImageURL=? WHERE ProductID=?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "UPDATE Product SET UnitName=?, BrandName=?, ProductStock=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=?, ProductImageURL=? WHERE ProductID=?")) {
 
             preparedStatement.setString(1, product.getUnitName());
             preparedStatement.setString(2, product.getBrandName());
@@ -91,8 +88,7 @@ public class ProductDAO {
 
     // Delete product by ID
     public boolean deleteProduct(int productID) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement("DELETE FROM Product WHERE ProductID=?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("DELETE FROM Product WHERE ProductID=?")) {
 
             preparedStatement.setInt(1, productID);
 
@@ -109,9 +105,7 @@ public class ProductDAO {
     public List<Product> getAllProducts() {
         List<Product> productList = new ArrayList<>();
 
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product"); ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Product product = mapResultSetToProduct(resultSet);
@@ -146,16 +140,15 @@ public class ProductDAO {
         // Log or handle the exception as needed
         e.printStackTrace();
     }
-    
+
     // Get product by ProductSKU
-    public Product getProductBySKU(String productSKU){
-        try (Connection con = connectionManager.getConnection();
-            PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductSKU =?")) {
-            
+    public Product getProductBySKU(String productSKU) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductSKU =?")) {
+
             preparedStatement.setString(1, productSKU);
-            
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if(resultSet.next()) {
+                if (resultSet.next()) {
                     return mapResultSetToProduct(resultSet);
                 }
             }
@@ -164,24 +157,42 @@ public class ProductDAO {
         }
         return null;
     }
-    
+
     // Get product by ProductName
-    public Product getProductByName(String productName){
-        try (Connection con = connectionManager.getConnection();
-            PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductName =?")) {
-            
+    public Product getProductByName(String productName) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE ProductName =?")) {
+
             preparedStatement.setString(1, productName);
-            
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if(resultSet.next()) {
+                if (resultSet.next()) {
                     return mapResultSetToProduct(resultSet);
                 }
             }
         } catch (SQLException e) {
             handleSQLException(e);
         }
-        return null;        
+        return null;
     }
-    
-    
+
+    // Get Products by SubCategoryName
+    public List<Product> getProductsBySubCategoryName(String subCategoryName) {
+
+        List<Product> productList = new ArrayList<>();
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Product WHERE SubCategoryName = ?")) {
+
+            preparedStatement.setString(1, subCategoryName);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Product product = mapResultSetToProduct(resultSet);
+                    productList.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+        return productList;
+    }
+
 }

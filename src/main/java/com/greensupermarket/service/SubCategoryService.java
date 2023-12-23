@@ -37,6 +37,13 @@ public class SubCategoryService {
         return subCategoryDao.getAllSubCategories();
     }
     
+    // Get subcategories by categoryname
+    public List<SubCategory> getSubCategoriesByCategoryName(String categoryName){
+        return subCategoryDao.getSubCategoriesByCategoryName(categoryName);       
+    }
     
-
+    // Get categoryname by subcategoryname
+    public String getCategoryNameBySubCategoryName(String subCategoryName){
+        return subCategoryDao.getCategoryNameBySubCategoryName(subCategoryName);
+    }
 }

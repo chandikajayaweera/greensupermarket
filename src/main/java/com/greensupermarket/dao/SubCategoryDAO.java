@@ -53,6 +53,25 @@ public class SubCategoryDAO {
 
         return null;
     }
+    
+    // Get categoryname by subcategoryname
+    public String getCategoryNameBySubCategoryName(String subCategoryName) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT CategoryName FROM SubCategory WHERE SubCategoryName = ?")) {
+
+            preparedStatement.setString(1, subCategoryName);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("CategoryName");
+                }
+            }
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+
+        return null;
+    }
 
     // Delete subcategory by name
     public boolean deleteSubCategory(String subCategoryName) {
@@ -99,5 +118,28 @@ public class SubCategoryDAO {
     private void handleSQLException(SQLException e) {
         // Log or handle the exception as needed
         e.printStackTrace();
+    }
+
+    // Get Subcategories by Category name
+    public List<SubCategory> getSubCategoriesByCategoryName(String categoryName) {
+        
+        List<SubCategory> subCategoryList = new ArrayList<>();
+        
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM SubCategory WHERE CategoryName = ?")) {
+
+            preparedStatement.setString(1, categoryName);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    SubCategory subCategory = mapResultSetToSubCategory(resultSet);
+                    subCategoryList.add(subCategory);
+                }
+            }
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+
+        return subCategoryList;
     }
 }

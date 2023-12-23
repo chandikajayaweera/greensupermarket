@@ -4,6 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="../resources/css/backend.css"/>
+        <link rel="stylesheet" href="../resources/css/bulma.min.css"/>
         <title>Customer dashboard</title>
     </head>
     <body>
@@ -16,9 +17,10 @@
             response.setHeader("Expires", "0"); 
 	        
             if(session.getAttribute("customer") == null){
-            response.sendRedirect("logincontroller?action=logout");
+            response.sendRedirect("login?action=logout");
             }
         %>
+        <jsp:include page="../template/frontend/navbar.jsp"/>
         <div id="container">
             <div id="sidebar">
                 <ul>
@@ -28,7 +30,7 @@
             </div>
             <div id="content">
                 <!-- Your main content goes here -->
-                <h1>Employee: ${customer.customerFname} ${customer.customerLname}<button onclick="location.href = 'logincontroller?action=logout'">Logout</button></h1>
+                <h1>Employee: ${customer.customerFname} ${customer.customerLname}<button onclick="location.href = 'login?action=logout'">Logout</button></h1>
                 <p>This is the main content area.</p>
             </div>
         </div>

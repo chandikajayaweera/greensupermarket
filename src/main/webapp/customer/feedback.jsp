@@ -4,6 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="../resources/css/bulma.min.css"/>
         <title>Feedback Page</title>
     </head>
     <body>
@@ -16,9 +17,10 @@
             response.setHeader("Expires", "0"); 
 	        
             if(session.getAttribute("customer") == null){
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("login?action=logout");
             }
         %>
+        <jsp:include page="../template/frontend/navbar.jsp"/>
         <div id="container">
             <div id="sidebar">
                 <ul>
@@ -33,7 +35,7 @@
                     <input type="hidden" name="action" value="feedback">
                     <table>
                         <tr>
-                            <td>How satisfied are your? Rate from 0 to 10</td>
+                            <td>How satisfied are you?<br> Rate from 0 to 10</td>
                             <td><input type="number" name="rate" min="0" max="10"></td>
                         </tr>
                         <tr>

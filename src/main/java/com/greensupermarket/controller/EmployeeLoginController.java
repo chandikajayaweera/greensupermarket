@@ -11,11 +11,11 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name = "LoginController", urlPatterns = {"/backend/login"})
-public class LoginController extends HttpServlet {
+public class EmployeeLoginController extends HttpServlet {
 
     private EmployeeService employeeService;
 
-    public LoginController() {
+    public EmployeeLoginController() {
         this.employeeService = new EmployeeService();
     }
 
