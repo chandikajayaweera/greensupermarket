@@ -22,10 +22,12 @@
                 <h3 class="has-text-centered is-size-3 has-text-weight-bold has-text-primary title">${sessionScope.categoryname} Products <% if (session.getAttribute("subcategoryname") != null) { %> > ${sessionScope.subcategoryname}<% } %></h3>
                 
                 <!-- Sub categories -->
-                <div class="columns is-centered is-multiline">
+                <div class="columns is-centered is-multiline is-vcentered">
                     <% if (session.getAttribute("subcategoryname") != null) { %>
                     <div class="column is-2 has-text-centered">
-                        <button onclick="location.href='controller?action=categories&categoryname=${sessionScope.categoryname}'" class="button is-danger is-rounded is-outlined">Reset</button>
+                        <span class="tag is-danger is-medium is-rounded">Reset
+                            <button onclick="location.href='controller?action=categories&categoryname=${sessionScope.categoryname}'" class="delete"></button>
+                        </span>
                     </div> <% } %>
                     
                     <c:forEach var="subcategory" items="${sessionScope.subcategories}">

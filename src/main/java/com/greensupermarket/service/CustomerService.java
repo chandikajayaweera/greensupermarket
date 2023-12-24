@@ -26,11 +26,19 @@ public class CustomerService {
         return false;
     }
     
-    // update customer
+    // update customer 
     public boolean updateCustomer(Customer customer){
-        if(customerDao.getCustomerByEmail(customer.getCustomerEmail()) != null){
-            customer.setCustomerPasswordHash(passwordHasher.hashPassword(customer.getCustomerPasswordHash()));
+        if(customerDao.getCustomerById(customer.getCustomerID()) != null){
             return customerDao.updateCustomer(customer);
+        }
+        return false;
+    }
+    
+    // Update customer password
+    public boolean updateCustomerpassword(Customer customer){
+        if(customerDao.getCustomerById(customer.getCustomerID()) != null){
+            customer.setCustomerPasswordHash(passwordHasher.hashPassword(customer.getCustomerPasswordHash()));
+            return customerDao.updateCustomerPassword(customer);
         }
         return false;
     }
@@ -59,5 +67,10 @@ public class CustomerService {
     // Get customer by email
     public Customer getCustomerByEmail(String customerEmail){
         return customerDao.getCustomerByEmail(customerEmail);
+    }
+    
+    // Get customer by ID
+    public Customer getCustomerByID(int customerID){
+        return customerDao.getCustomerById(customerID);
     }
 }

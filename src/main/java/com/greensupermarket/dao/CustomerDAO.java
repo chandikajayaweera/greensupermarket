@@ -60,14 +60,30 @@ public class CustomerDAO {
     // Update customer
     public boolean updateCustomer(Customer customer) {
         try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
-                "UPDATE Customer SET CustomerFname=?, CustomerLname=?, CustomerEmail=?, CustomerPnumber=?, CustomerPasswordHash=? WHERE CustomerID=?")) {
+                "UPDATE Customer SET CustomerFname=?, CustomerLname=?, CustomerEmail=?, CustomerPnumber=? WHERE CustomerID=?")) {
 
             preparedStatement.setString(1, customer.getCustomerFname());
             preparedStatement.setString(2, customer.getCustomerLname());
             preparedStatement.setString(3, customer.getCustomerEmail());
             preparedStatement.setString(4, customer.getCustomerPnumber());
-            preparedStatement.setString(5, customer.getCustomerPasswordHash());
-            preparedStatement.setInt(6, customer.getCustomerID());
+            preparedStatement.setInt(5, customer.getCustomerID());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+            return false;
+        }
+    }
+
+    // Update customer password
+    public boolean updateCustomerPassword(Customer customer) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "UPDATE Customer SET CustomerPasswordHash=? WHERE CustomerID=?")) {
+
+            preparedStatement.setString(1, customer.getCustomerPasswordHash());
+            preparedStatement.setInt(2, customer.getCustomerID());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -145,7 +161,7 @@ public class CustomerDAO {
         }
         return null;
     }
-    
+
     // Get customer by pnumber
     public Customer getCustomerByPnumber(String customerPnumber) {
         try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT CustomerID, CustomerFname, CustomerLname, CustomerEmail, CustomerPnumber FROM Customer WHERE customerPnumber = ?")) {
@@ -162,22 +178,20 @@ public class CustomerDAO {
             handleSQLException(e);
         }
         return null;
-    }    
-    
+    }
+
     // Get password by Email
-    public String getPasswordByEmail(String customerEmail){
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement("SELECT CustomerPasswordHash FROM Customer WHERE CustomerEmail = ?")) {    
-            
+    public String getPasswordByEmail(String customerEmail) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT CustomerPasswordHash FROM Customer WHERE CustomerEmail = ?")) {
+
             preparedStatement.setString(1, customerEmail);
-            
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     return resultSet.getString("CustomerPasswordHash");
                 }
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             handleSQLException(e);
         }
         return null;
