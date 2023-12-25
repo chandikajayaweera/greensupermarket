@@ -65,17 +65,6 @@ CREATE TABLE `address` (
   CONSTRAINT `address_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `orderitem` (
-  `CustomerOrderID` int NOT NULL,
-  `ProductID` int NOT NULL,
-  `OrderItemQuantity` int DEFAULT NULL,
-  `OrderItemUnitPrice` decimal(10,0) DEFAULT NULL,
-  PRIMARY KEY (`CustomerOrderID`,`ProductID`),
-  KEY `ProductID` (`ProductID`),
-  CONSTRAINT `orderitem_ibfk_1` FOREIGN KEY (`CustomerOrderID`) REFERENCES `customerorder` (`CustomerOrderID`),
-  CONSTRAINT `orderitem_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `product` (`ProductID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 CREATE TABLE `customerorder` (
   `CustomerOrderID` int NOT NULL AUTO_INCREMENT,
   `CustomerID` int DEFAULT NULL,
@@ -90,6 +79,17 @@ CREATE TABLE `customerorder` (
   CONSTRAINT `customerorder_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`),
   CONSTRAINT `customerorder_ibfk_2` FOREIGN KEY (`ShippingAddressID`, `CustomerID`) REFERENCES `address` (`AddressID`, `CustomerID`),
   CONSTRAINT `customerorder_ibfk_3` FOREIGN KEY (`BillingAddressID`, `CustomerID`) REFERENCES `address` (`AddressID`, `CustomerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `orderitem` (
+  `CustomerOrderID` int NOT NULL,
+  `ProductID` int NOT NULL,
+  `OrderItemQuantity` int DEFAULT NULL,
+  `OrderItemUnitPrice` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`CustomerOrderID`,`ProductID`),
+  KEY `ProductID` (`ProductID`),
+  CONSTRAINT `orderitem_ibfk_1` FOREIGN KEY (`CustomerOrderID`) REFERENCES `customerorder` (`CustomerOrderID`),
+  CONSTRAINT `orderitem_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `product` (`ProductID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `feedback` (
