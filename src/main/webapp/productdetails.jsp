@@ -18,7 +18,6 @@
         <!-- Navbar -->
         <jsp:include page="template/frontend/navbar.jsp"/>
 
-
         <!-- product info -->
         <section class="section">
             <div class="container">
@@ -38,8 +37,12 @@
                         <p class="mb-4">(Stock remaining: ${product.productStock})</p>
                         <c:choose>
                             <c:when test="${product.productStock > 0}">
-                                <input type="number" name="quantity" value="1" max="${product.productStock}" min="1" ><br><br>
-                                <button class="button is-primary">Add to Cart</button>
+                                <form action="cart" method="GET">
+                                    <input type="hidden" name="action" value="addtocart">
+                                    <input type="hidden" name="productid" value="${product.productID}">
+                                    <input type="number" name="quantity" value="1" max="${product.productStock}" min="1" ><br><br>
+                                    <button class="button is-primary" type="submit">Add to Cart</button>
+                                </form>
                             </c:when>
                             <c:otherwise>
                                 <button class="button is-primary" disabled>Out of Stock</button>

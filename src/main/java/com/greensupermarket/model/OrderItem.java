@@ -4,6 +4,8 @@ public class OrderItem {
 
     private int customerOrderID;
     private int productID;
+    private String productName;
+    private String productImageURL;
     private int orderItemQuantity;
     private double orderItemUnitPrice;
 
@@ -12,9 +14,11 @@ public class OrderItem {
     }
 
     // Parameterized constructor
-    public OrderItem(int customerOrderID, int productID, int orderItemQuantity, double orderItemUnitPrice) {
+    public OrderItem(int customerOrderID, int productID, String productName, String productImageURL, int orderItemQuantity, double orderItemUnitPrice) {
         this.customerOrderID = customerOrderID;
         this.productID = productID;
+        this.productName = productName;
+        this.productImageURL = productImageURL;
         this.orderItemQuantity = orderItemQuantity;
         this.orderItemUnitPrice = orderItemUnitPrice;
     }
@@ -34,6 +38,22 @@ public class OrderItem {
 
     public void setProductID(int productID) {
         this.productID = productID;
+    }
+    
+    public String getProductName(){
+        return productName;
+    }
+    
+    public void setProductName(String productName){
+        this.productName = productName;
+    }
+    
+    public String getProductImageURL(){
+        return productImageURL;
+    }
+    
+    public void setProductImageURL(String productImageURL){
+        this.productImageURL = productImageURL;
     }
 
     public int getOrderItemQuantity() {
@@ -58,6 +78,8 @@ public class OrderItem {
         return "OrderItem{" +
                 "customerOrderID=" + customerOrderID +
                 ", productID=" + productID +
+                ", productName=" + productName +
+                ", productImageURL=" + productImageURL +
                 ", orderItemQuantity=" + orderItemQuantity +
                 ", orderItemUnitPrice=" + orderItemUnitPrice +
                 '}';

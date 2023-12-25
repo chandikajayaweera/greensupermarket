@@ -3,7 +3,6 @@ package com.greensupermarket.model;
 public class Product {
 
     private int productID;
-    private String unitName;
     private String brandName;
     private String subCategoryName;
     private String productSKU;
@@ -20,7 +19,6 @@ public class Product {
     // Parameterized constructor
     public Product(
             int productID,
-            String unitName,
             String brandName,
             String subCategoryName,
             String productSKU,
@@ -32,7 +30,6 @@ public class Product {
             
     ) {
         this.productID = productID;
-        this.unitName = unitName;
         this.brandName = brandName;
         this.subCategoryName = subCategoryName;
         this.productSKU = productSKU;
@@ -50,14 +47,6 @@ public class Product {
 
     public void setProductID(int productID) {
         this.productID = productID;
-    }
-
-    public String getUnitName() {
-        return unitName;
-    }
-
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
     }
 
     public String getBrandName() {
@@ -129,7 +118,6 @@ public class Product {
     public String toString() {
         return "Product{" +
                 "productID=" + productID +
-                ", unitName='" + unitName + '\'' +
                 ", brandName='" + brandName + '\'' +
                 ", subCategoryName='" + subCategoryName + '\'' +
                 ", productSKU='" + productSKU + '\'' +

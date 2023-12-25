@@ -24,7 +24,6 @@
             <div id="sidebar">
                 <ul>
                     <li><font size="30"><a href="dashboard.jsp"><b>Dash</b></a></font></li>
-                    <li><a href="controller?action=units">Units</a></li>
                     <li><a href="controller?action=categories">Categories</a></li>
                     <li><a href="controller?action=subcategories">Sub Categories</a></li>
                     <li><a href="controller?action=products">Products</a></li>

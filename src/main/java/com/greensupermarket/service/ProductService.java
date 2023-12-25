@@ -114,6 +114,22 @@ public class ProductService {
         }
         return false;
     }
+    
+    //Update product stock
+    public boolean updateProductStock(Product product){
+        if(productDao.getProductById(product.getProductID()) != null){
+            return productDao.updateProductStock(product);
+        }
+        return false;
+    }
+    
+    //Update product unit price
+    public boolean updateProductUnitPrice(Product product){
+        if(productDao.getProductById(product.getProductID()) != null){
+            return productDao.updateProductUnitPrice(product);
+        }
+        return false;
+    }
 
     // Delete a product
     public boolean deleteProduct(int productID) {

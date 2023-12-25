@@ -13,6 +13,6 @@
     </head>
     <body>
         <h1>Test works</h1>
-        ${path}
+        ${product}
     </body>
 </html>

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @MultipartConfig
 @WebServlet(name = "BackendController", urlPatterns = {"/backend/controller"})
@@ -18,7 +19,6 @@ public class BackendController extends HttpServlet {
 
     // Services
     private EmployeeService employeeService;
-    private UnitService unitService;
     private CategoryService categoryService;
     private SubCategoryService subCategoryService;
     private CustomerService customerService;
@@ -27,7 +27,6 @@ public class BackendController extends HttpServlet {
 
     // Models
     private Employee employee;
-    private Unit unit;
     private Category category;
     private SubCategory subCategory;
     private Customer customer;
@@ -38,7 +37,6 @@ public class BackendController extends HttpServlet {
 
         // Services
         this.employeeService = new EmployeeService();
-        this.unitService = new UnitService();
         this.categoryService = new CategoryService();
         this.subCategoryService = new SubCategoryService();
         this.customerService = new CustomerService();
@@ -47,7 +45,6 @@ public class BackendController extends HttpServlet {
 
         // Models
         this.employee = new Employee();
-        this.unit = new Unit();
         this.category = new Category();
         this.subCategory = new SubCategory();
         this.customer = new Customer();
@@ -71,10 +68,6 @@ public class BackendController extends HttpServlet {
         String action = request.getParameter("action");
         
         switch (action) {
-            case "units":
-                session.setAttribute("units", unitService.getAllUnits());
-                response.sendRedirect("units.jsp");
-                return;
             case "categories":
                 session.setAttribute("categories", categoryService.getAllCategories());
                 response.sendRedirect("categories.jsp");
@@ -89,7 +82,6 @@ public class BackendController extends HttpServlet {
                 response.sendRedirect("customers.jsp");
                 return;
             case "products":
-                session.setAttribute("units", unitService.getAllUnits());
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 session.setAttribute("products", productService.getAllProducts());
                 response.sendRedirect("products.jsp");
@@ -122,9 +114,6 @@ public class BackendController extends HttpServlet {
         String action = request.getParameter("action");
 
         switch (action) {
-            case "units":
-                units(session, request, response);
-                return;
             case "categories":
                 categories(session, request, response);
                 return;
@@ -156,32 +145,6 @@ public class BackendController extends HttpServlet {
             return false;
         }
         return true;
-    }
-
-    private void units(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        session.setAttribute("units", unitService.getAllUnits());
-
-        if (request.getParameter("query") == null) {
-            response.sendRedirect("units.jsp");
-            return;
-        }
-        String query = request.getParameter("query");
-
-        switch (query) {
-            case "delete":
-                unitService.deleteUnit(request.getParameter("unitname"));
-                session.setAttribute("units", unitService.getAllUnits());
-                response.sendRedirect("units.jsp");
-                return;
-
-            case "add":
-                unit.setUnitName(request.getParameter("unitname"));
-                unit.setUnitAbbreviation(request.getParameter("unitabbreviation"));
-                unitService.addUnit(unit);
-                session.setAttribute("units", unitService.getAllUnits());
-                response.sendRedirect("units.jsp");
-                return;
-        }
     }
 
     private void categories(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -282,7 +245,6 @@ public class BackendController extends HttpServlet {
     }
 
     private void products(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        session.setAttribute("units", unitService.getAllUnits());
         session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
         session.setAttribute("products", productService.getAllProducts());
 
@@ -299,21 +261,51 @@ public class BackendController extends HttpServlet {
                 product.setProductName(request.getParameter("productname"));
                 product.setProductSKU(request.getParameter("productsku"));
                 product.setBrandName(request.getParameter("brandname"));
-                product.setUnitName(request.getParameter("unitname"));
                 product.setSubCategoryName(request.getParameter("subcategoryname"));
                 product.setProductDescription(request.getParameter("productdescription"));
                 product.setProductUnitPrice(Double.parseDouble(request.getParameter("productunitprice")));
                 product.setProductStock(Integer.parseInt(request.getParameter("productstock")));
                 productService.addProduct(product, productImage, request);
-                session.setAttribute("units", unitService.getAllUnits());
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 session.setAttribute("products", productService.getAllProducts());
                 response.sendRedirect("products.jsp");
                 return;
-
+                
+            case "update":
+                productImage = request.getPart("productimage");
+                product.setProductID(Integer.parseInt(request.getParameter("productid")));
+                product.setProductName(request.getParameter("productname"));
+                product.setProductSKU(request.getParameter("productsku"));
+                product.setBrandName(request.getParameter("brandname"));
+                product.setSubCategoryName(request.getParameter("subcategoryname"));
+                product.setProductDescription(request.getParameter("productdescription"));
+                product.setProductUnitPrice(Double.parseDouble(request.getParameter("productunitprice")));
+                productService.updateProduct(product, productImage, request);
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                session.setAttribute("products", productService.getAllProducts());
+                response.sendRedirect("products.jsp");
+                return;
+                
+            case "updatestock":
+                product.setProductID(Integer.parseInt(request.getParameter("productid")));
+                product.setProductStock(Integer.parseInt(request.getParameter("productstock")));
+                productService.updateProductStock(product);
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                session.setAttribute("products", productService.getAllProducts());
+                response.sendRedirect("products.jsp");
+                return;
+            
+            case "updateunitprice":
+                product.setProductID(Integer.parseInt(request.getParameter("productid")));
+                product.setProductUnitPrice(Double.parseDouble(request.getParameter("unitprice")));
+                productService.updateProductUnitPrice(product);
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                session.setAttribute("products", productService.getAllProducts());
+                response.sendRedirect("products.jsp");
+                return;
+                
             case "delete":
                 productService.deleteProduct(Integer.parseInt(request.getParameter("productid")));
-                session.setAttribute("units", unitService.getAllUnits());
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 session.setAttribute("products", productService.getAllProducts());
                 response.sendRedirect("products.jsp");

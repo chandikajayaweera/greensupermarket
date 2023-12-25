@@ -26,7 +26,6 @@
             <div id="sidebar">
                 <ul>
                     <li><font size="30"><a href="dashboard.jsp"><b>Dash</b></a></font></li>
-                    <li><a href="controller?action=units">Units</a></li>
                     <li><a href="controller?action=categories">Categories</a></li>
                     <li><a href="controller?action=subcategories">Sub Categories</a></li>
                     <li><a href="controller?action=products">Products</a></li>
@@ -47,11 +46,11 @@
                             <th>Product Name</th>
                             <th>Product SKU</th>
                             <th>Brand Name</th>
-                            <th>Unit Name</th>
                             <th>SubCategory</th>
                             <th>Product description</th>
                             <th>Product Unit Price</th>
                             <th>Product Stock</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,7 +61,6 @@
                                 <td>${product.productName}</td>
                                 <td>${product.productSKU}</td>
                                 <td>${product.brandName}</td>
-                                <td>${product.unitName}</td>
                                 <td>${product.subCategoryName}</td>
                                 <td>${product.productDescription}</td>
                                 <td>${product.productUnitPrice}</td>
@@ -70,6 +68,7 @@
                                 <td><form action="controller?action=products&query=delete&productid=${product.productID}" method="POST">
                                         <button type="submit">Delete</button>
                                     </form>
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -91,16 +90,6 @@
                         <tr>
                             <td>Enter Brand name:</td>
                             <td><input type="text" name="brandname"></td>
-                        </tr>
-                        <tr>
-                            <td>Select product unit:</td>
-                            <td>
-                                <select id="unitDropdown" name="unitname">
-                                    <c:forEach var="unit" items="${units}">
-                                        <option value="${unit.unitName}">${unit.unitName} | ${unit.unitAbbreviation}</option>
-                                    </c:forEach>
-                                </select>
-                            </td>   
                         </tr>
                         <tr>
                             <td>Select product subcategory</td>
@@ -133,6 +122,110 @@
                         </tr>
                     </table>
                 </form>  
+                
+                <h2>Update product</h2>
+                <form action='controller' method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="products">
+                    <input type="hidden" name="query" value="update">
+                    <table>
+                        <tr>
+                            <td>Select product:</td>
+                            <td>
+                                <select id="productDropdown" name="productid">
+                                    <c:forEach var="product" items="${products}">
+                                        <option value="${product.productID}">Product ID: ${product.productID}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Enter product name:</td>
+                            <td><input type="text" name="productname"></td>
+                        </tr>
+                        <tr>
+                            <td>Enter product SKU:</td>
+                            <td><input type="text" name="productsku"></td>
+                        </tr>
+                        <tr>
+                            <td>Enter Brand name:</td>
+                            <td><input type="text" name="brandname"></td>
+                        </tr>
+                        <tr>
+                            <td>Select product subcategory</td>
+                            <td>
+                                <select id="subCategoryDropdown" name="subcategoryname">
+                                    <c:forEach var="subcategory" items="${subcategories}">
+                                        <option value="${subcategory.subCategoryName}">${subcategory.subCategoryName}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Enter product description</td>
+                            <td><textarea name="productdescription" style="resize:none" rows="4" cols="50"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>Enter product unit price</td>
+                            <td><input type="number" name="productunitprice" min="1" step="0.01"></td>
+                        </tr>
+                        <tr>
+                            <td>Enter product image</td>
+                            <td><input type="file" name="productimage" accept="image/*"></td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit">Submit</button></td>
+                        </tr>
+                    </table>
+                </form>
+                
+                <h2>Update product stock</h2>
+                <form action='controller' method="POST">
+                    <input type="hidden" name="action" value="products">
+                    <input type="hidden" name="query" value="updatestock">
+                    <table>
+                        <tr>
+                            <td>Select product id:</td>
+                            <td>Enter quantity</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="productDropdown" name="productid">
+                                    <c:forEach var="product" items="${products}">
+                                        <option value="${product.productID}">Product ID: ${product.productID}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                            <td><input type="number" name="productstock" min="0"></td>
+                            <td><input type="submit" value="Update"></td>
+                        </tr>
+                    </table>
+                </form>
+                
+                <h2>Update product unit price</h2>
+                <form action='controller' method="POST">
+                    <input type="hidden" name="action" value="products">
+                    <input type="hidden" name="query" value="updateunitprice">
+                    <table>
+                        <tr>
+                            <td>Select product id:</td>
+                            <td>Enter new price</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="productDropdown" name="productid">
+                                    <c:forEach var="product" items="${products}">
+                                        <option value="${product.productID}">Product ID: ${product.productID}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                            <td><input type="number" name="unitprice" min="1" step="0.01"></td>
+                            <td><input type="submit" value="Update"></td>
+                        </tr>
+                    </table>
+                </form>
+                
 
             </div>
         </div>

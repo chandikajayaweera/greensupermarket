@@ -21,17 +21,16 @@ public class ProductDAO {
     // Create a new product
     public boolean addProduct(Product product) {
         try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
-                "INSERT INTO Product (UnitName, BrandName, ProductStock, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice, ProductImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                "INSERT INTO Product (BrandName, ProductStock, SubCategoryName, ProductSKU, ProductName, ProductDescription, ProductUnitPrice, ProductImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
 
-            preparedStatement.setString(1, product.getUnitName());
-            preparedStatement.setString(2, product.getBrandName());
-            preparedStatement.setInt(3, product.getProductStock());
-            preparedStatement.setString(4, product.getSubCategoryName());
-            preparedStatement.setString(5, product.getProductSKU());
-            preparedStatement.setString(6, product.getProductName());
-            preparedStatement.setString(7, product.getProductDescription());
-            preparedStatement.setDouble(8, product.getProductUnitPrice());
-            preparedStatement.setString(9, product.getProductImageURL());
+            preparedStatement.setString(1, product.getBrandName());
+            preparedStatement.setInt(2, product.getProductStock());
+            preparedStatement.setString(3, product.getSubCategoryName());
+            preparedStatement.setString(4, product.getProductSKU());
+            preparedStatement.setString(5, product.getProductName());
+            preparedStatement.setString(6, product.getProductDescription());
+            preparedStatement.setDouble(7, product.getProductUnitPrice());
+            preparedStatement.setString(8, product.getProductImageURL());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -64,22 +63,54 @@ public class ProductDAO {
     // Update product
     public boolean updateProduct(Product product) {
         try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
-                "UPDATE Product SET UnitName=?, BrandName=?, ProductStock=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=?, ProductImageURL=? WHERE ProductID=?")) {
+                "UPDATE Product SET BrandName=?, SubCategoryName=?, ProductSKU=?, ProductName=?, ProductDescription=?, ProductUnitPrice=?, ProductImageURL=? WHERE ProductID=?")) {
 
-            preparedStatement.setString(1, product.getUnitName());
-            preparedStatement.setString(2, product.getBrandName());
-            preparedStatement.setInt(3, product.getProductStock());
-            preparedStatement.setString(4, product.getSubCategoryName());
-            preparedStatement.setString(5, product.getProductSKU());
-            preparedStatement.setString(6, product.getProductName());
-            preparedStatement.setString(7, product.getProductDescription());
-            preparedStatement.setDouble(8, product.getProductUnitPrice());
-            preparedStatement.setString(9, product.getProductImageURL());
-            preparedStatement.setInt(10, product.getProductID());
+            preparedStatement.setString(1, product.getBrandName());
+            preparedStatement.setString(2, product.getSubCategoryName());
+            preparedStatement.setString(3, product.getProductSKU());
+            preparedStatement.setString(4, product.getProductName());
+            preparedStatement.setString(5, product.getProductDescription());
+            preparedStatement.setDouble(6, product.getProductUnitPrice());
+            preparedStatement.setString(7, product.getProductImageURL());
+            preparedStatement.setInt(8, product.getProductID());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
 
+        } catch (SQLException e) {
+            handleSQLException(e);
+            return false;
+        }
+    }
+    
+    // Update product stock
+    public boolean updateProductStock(Product product){
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "UPDATE Product SET ProductStock=? WHERE ProductID=?")) {
+            
+            preparedStatement.setInt(1, product.getProductStock());
+            preparedStatement.setInt(2, product.getProductID());
+            
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            handleSQLException(e);
+            return false;
+        }
+    }
+    
+    // Update product Unit Price
+    public boolean updateProductUnitPrice(Product product){
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "UPDATE Product SET ProductUnitPrice=? WHERE ProductID=?")) {
+            
+            preparedStatement.setDouble(1, product.getProductUnitPrice());
+            preparedStatement.setInt(2, product.getProductID());
+            
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+            
         } catch (SQLException e) {
             handleSQLException(e);
             return false;
@@ -123,7 +154,6 @@ public class ProductDAO {
     private Product mapResultSetToProduct(ResultSet resultSet) throws SQLException {
         Product product = new Product();
         product.setProductID(resultSet.getInt("ProductID"));
-        product.setUnitName(resultSet.getString("UnitName"));
         product.setBrandName(resultSet.getString("BrandName"));
         product.setProductStock(resultSet.getInt("ProductStock"));
         product.setSubCategoryName(resultSet.getString("SubCategoryName"));

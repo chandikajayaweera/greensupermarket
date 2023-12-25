@@ -16,7 +16,7 @@ public class CustomerLoginController extends HttpServlet {
 
     private CustomerService customerService;
     private Customer customer;
-
+    
     public CustomerLoginController() {
         this.customerService = new CustomerService();
         this.customer = new Customer();
