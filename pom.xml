@@ -46,7 +46,13 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.5</version>
         </dependency>
-
+        
+        <!-- https://mvnrepository.com/artifact/com.paypal.sdk/rest-api-sdk -->
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>rest-api-sdk</artifactId>
+            <version>1.14.0</version>
+        </dependency>
         
         <!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
         <dependency>

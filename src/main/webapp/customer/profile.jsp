@@ -24,9 +24,10 @@
         <div id="container">
             <div id="sidebar">
                 <ul>
-                    <li><a href="dashboard.jsp"><b>Dashboard</b></a></li>
-                    <li><a href="controller?action=feedback">Feedback</a></li>
+                    <li><a href="dashboard.jsp">Dashboard</a></li>
+                    <li><a href="controller?action=orders">Orders</a></li>
                     <li><a href="controller?action=profile">Profile</a></li>
+                    <li><a href="controller?action=feedback">Feedback</a></li>
                 </ul>
             </div>
             <div id="content">

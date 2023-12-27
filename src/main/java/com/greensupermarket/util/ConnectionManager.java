@@ -13,7 +13,7 @@ public class ConnectionManager {
         
         try {
             // Provide the path to your database.properties file
-            InputStream = getClass().getClassLoader().getResourceAsStream("DB/database.properties");
+            InputStream = getClass().getClassLoader().getResourceAsStream("config/database.properties");
             properties.load(InputStream);
             
             String dbUrl = properties.getProperty("database.url");

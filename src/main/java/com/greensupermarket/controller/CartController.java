@@ -1,11 +1,12 @@
 package com.greensupermarket.controller;
 
 import com.greensupermarket.model.Cart;
-import com.greensupermarket.model.Customer;
 import com.greensupermarket.model.OrderItem;
+import com.greensupermarket.model.Customer;
+import com.greensupermarket.model.Product;
 
-import com.greensupermarket.service.CartService;
 import com.greensupermarket.service.CustomerService;
+import com.greensupermarket.service.ProductService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,15 +20,25 @@ import java.util.ArrayList;
 @WebServlet(name = "CartController", urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
 
-    private final CartService cartService;
-    private final CustomerService customerService;
+    //Models
     private final OrderItem orderItem;
+    private final Customer customer;
+
+    //Services
+    private final CustomerService customerService;
+    private final ProductService productService;
 
     // Constructor
     public CartController() {
-        this.cartService = new CartService();
-        this.customerService = new CustomerService();
+
+        //Models
         this.orderItem = new OrderItem();
+        this.customer = new Customer();
+
+        //Services
+        this.customerService = new CustomerService();
+        this.productService = new ProductService();
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,13 +61,7 @@ public class CartController extends HttpServlet {
 
         switch (action) {
             case "addtocart":
-                int productId = Integer.parseInt(request.getParameter("productid"));
-                int quantity = Integer.parseInt(request.getParameter("quantity"));
-
-                cartService.addToCart(cart, productId, quantity);
-
-                String referringURL = request.getHeader("referer");
-                response.sendRedirect(referringURL != null ? referringURL : "index.jsp");
+                addToCart(session, request, response);
                 break;
 
             case "removefromcart":
@@ -73,6 +78,13 @@ public class CartController extends HttpServlet {
                 session.setAttribute("total", cart.getTotalPrice());
                 response.sendRedirect("cart.jsp");
                 break;
+
+            case "checkout":
+                Customer customer = (Customer) session.getAttribute("customer");
+                session.setAttribute("orderitems", cart.getOrderItems());
+                session.setAttribute("total", cart.getTotalPrice());
+                response.sendRedirect("checkout.jsp");
+                return;
         }
     }
 
@@ -127,7 +139,7 @@ public class CartController extends HttpServlet {
 
         if (cartObject instanceof Cart) {
             return (Cart) cartObject;
-            
+
         } else if (cartObject instanceof ArrayList) {
             Cart cart = new Cart();
             cart.getOrderItems().addAll((ArrayList<OrderItem>) cartObject);
@@ -136,6 +148,50 @@ public class CartController extends HttpServlet {
         } else {
             throw new RuntimeException("Unexpected object type for 'cart' in the session");
         }
+    }
+
+    private void addToCart(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int productId = Integer.parseInt(request.getParameter("productid"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        Cart cart = getOrCreateCart(session);
+
+        Product product = productService.getProductByID(productId);
+
+        if (product != null) {
+            // Check if the product is already in the cart
+            OrderItem existingItem = findOrderItemInCart(cart, productId);
+
+            if (existingItem != null) {
+
+                if ((existingItem.getOrderItemQuantity() + quantity) > product.getProductStock()) {
+                    throw new IllegalArgumentException("Quantity exceeds available stock");
+                }
+
+                existingItem.setOrderItemQuantity(existingItem.getOrderItemQuantity() + quantity);
+
+            } else {
+
+                OrderItem orderItem = new OrderItem();
+                orderItem.setProductID(product.getProductID());
+                orderItem.setProductName(product.getProductName());
+                orderItem.setProductImageURL(product.getProductImageURL());
+                orderItem.setOrderItemUnitPrice(product.getProductUnitPrice());
+                orderItem.setOrderItemQuantity(quantity);
+                cart.addItem(orderItem);
+            }
+        }
+
+        String referringURL = request.getHeader("referer");
+        response.sendRedirect(referringURL != null ? referringURL : "index.jsp");
+        return;
+    }
+
+    private OrderItem findOrderItemInCart(Cart cart, int productID) {
+        return cart.getOrderItems()
+                .stream()
+                .filter(item -> item.getProductID() == productID)
+                .findFirst()
+                .orElse(null);
     }
 
 }

@@ -1,3 +1,6 @@
+<%@taglib prefix="fn" uri="jakarta.tags.functions"%>
+<%@taglib prefix="c" uri="jakarta.tags.core"%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -24,14 +27,15 @@
         <div id="container">
             <div id="sidebar">
                 <ul>
-                    <li><a href="dashboard.jsp"><b>Dashboard</b></a></li>
-                    <li><a href="controller?action=feedback">Feedback</a></li>
+                    <li><a href="dashboard.jsp">Dashboard</a></li>
+                    <li><a href="controller?action=orders">Orders</a></li>
                     <li><a href="controller?action=profile">Profile</a></li>
+                    <li><a href="controller?action=feedback">Feedback</a></li>
                 </ul>
             </div>
             <div id="content">
                 <!-- Your main content goes here -->
-                <h1>Employee: ${customer.customerFname} ${customer.customerLname}<button onclick="location.href = 'login?action=logout'">Logout</button></h1>
+                <h1>Customer: ${customer.customerID} ${customer.customerFname} ${customer.customerLname}<button onclick="location.href = 'login?action=logout'">Logout</button></h1>
                 <p>This is the main content area.</p>
             </div>
         </div>

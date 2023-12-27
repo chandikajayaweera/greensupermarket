@@ -1,9 +1,3 @@
-<%-- 
-    Document   : testing
-    Created on : Dec 20, 2023, 10:43:10 AM
-    Author     : Chandika Jayaweera
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,7 +6,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Test works</h1>
-        ${address}
+        <h1>Hello World!</h1>
     </body>
 </html>

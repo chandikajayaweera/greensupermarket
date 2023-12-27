@@ -20,9 +20,8 @@ public class OrderItemDAO {
 
     // Create a new order item
     public boolean addOrderItem(OrderItem orderItem) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "INSERT INTO OrderItem (CustomerOrderID, ProductID, OrderItemQuantity, OrderItemUnitPrice) VALUES (?, ?, ?, ?)")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "INSERT INTO OrderItem (CustomerOrderID, ProductID, OrderItemQuantity, OrderItemUnitPrice) VALUES (?, ?, ?, ?)")) {
 
             preparedStatement.setInt(1, orderItem.getCustomerOrderID());
             preparedStatement.setInt(2, orderItem.getProductID());
@@ -39,10 +38,9 @@ public class OrderItemDAO {
     }
 
     // Retrieve order item by order ID and product ID
-    public OrderItem getOrderItemByIds(int customerOrderID, int productID) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "SELECT * FROM OrderItem WHERE CustomerOrderID = ? AND ProductID = ?")) {
+    public OrderItem getOrderItemById(int customerOrderID, int productID) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "SELECT * FROM OrderItem WHERE CustomerOrderID = ? AND ProductID = ?")) {
 
             preparedStatement.setInt(1, customerOrderID);
             preparedStatement.setInt(2, productID);
@@ -62,9 +60,8 @@ public class OrderItemDAO {
 
     // Update order item
     public boolean updateOrderItem(OrderItem orderItem) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "UPDATE OrderItem SET OrderItemQuantity=?, OrderItemUnitPrice=? WHERE CustomerOrderID=? AND ProductID=?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "UPDATE OrderItem SET OrderItemQuantity=?, OrderItemUnitPrice=? WHERE CustomerOrderID=? AND ProductID=?")) {
 
             preparedStatement.setInt(1, orderItem.getOrderItemQuantity());
             preparedStatement.setDouble(2, orderItem.getOrderItemUnitPrice());
@@ -82,9 +79,8 @@ public class OrderItemDAO {
 
     // Delete order item by order ID and product ID
     public boolean deleteOrderItem(int customerOrderID, int productID) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "DELETE FROM OrderItem WHERE CustomerOrderID=? AND ProductID=?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "DELETE FROM OrderItem WHERE CustomerOrderID=? AND ProductID=?")) {
 
             preparedStatement.setInt(1, customerOrderID);
             preparedStatement.setInt(2, productID);
@@ -102,9 +98,8 @@ public class OrderItemDAO {
     public List<OrderItem> getAllOrderItemsByOrderId(int customerOrderID) {
         List<OrderItem> orderItemList = new ArrayList<>();
 
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "SELECT * FROM OrderItem WHERE CustomerOrderID=?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "SELECT * FROM OrderItem WHERE CustomerOrderID=?")) {
 
             preparedStatement.setInt(1, customerOrderID);
 
@@ -136,5 +131,23 @@ public class OrderItemDAO {
     private void handleSQLException(SQLException e) {
         // Log or handle the exception as needed
         e.printStackTrace();
+    }
+
+    // Get all order items
+    public List<OrderItem> getAllOrderItems() {
+        List<OrderItem> orderItemList = new ArrayList<>();
+
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM OrderItem"); ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                OrderItem orderItem = mapResultSetToOrderItem(resultSet);
+                orderItemList.add(orderItem);
+            }
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+
+        return orderItemList;
     }
 }

@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CustomerOrderDAO {
@@ -21,15 +20,13 @@ public class CustomerOrderDAO {
 
     // Create a new customer order
     public boolean createCustomerOrder(CustomerOrder customerOrder) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "INSERT INTO CustomerOrder (CustomerID, ShippingAddressID, BillingAddressID, CustomerOrderDate, CustomerOrderStatus) VALUES (?, ?, ?, ?, ?)")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "INSERT INTO CustomerOrder (CustomerID, CustomerOrderDate, CustomerOrderStatus, PaymentID) VALUES (?, ?, ?, ?)")) {
 
             preparedStatement.setInt(1, customerOrder.getCustomerID());
-            preparedStatement.setInt(2, customerOrder.getShippingAddressID());
-            preparedStatement.setInt(3, customerOrder.getBillingAddressID());
-            preparedStatement.setDate(4, new java.sql.Date(customerOrder.getCustomerOrderDate().getTime()));
-            preparedStatement.setString(5, customerOrder.getCustomerOrderStatus());
+            preparedStatement.setDate(2, new java.sql.Date(customerOrder.getCustomerOrderDate().getTime()));
+            preparedStatement.setString(3, customerOrder.getCustomerOrderStatus());
+            preparedStatement.setString(4, customerOrder.getPaymentID());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -42,8 +39,7 @@ public class CustomerOrderDAO {
 
     // Retrieve customer order by ID
     public CustomerOrder getCustomerOrderById(int customerOrderID) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM CustomerOrder WHERE CustomerOrderID = ?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM CustomerOrder WHERE CustomerOrderID = ?")) {
 
             preparedStatement.setInt(1, customerOrderID);
 
@@ -62,32 +58,14 @@ public class CustomerOrderDAO {
 
     // Update customer order
     public boolean updateCustomerOrder(CustomerOrder customerOrder) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(
-                     "UPDATE CustomerOrder SET CustomerID=?, ShippingAddressID=?, BillingAddressID=?, CustomerOrderDate=?, CustomerOrderStatus=? WHERE CustomerOrderID=?")) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "UPDATE CustomerOrder SET CustomerID=?, CustomerOrderDate=?, CustomerOrderStatus=?, PaymentID=? WHERE CustomerOrderID=?")) {
 
             preparedStatement.setInt(1, customerOrder.getCustomerID());
-            preparedStatement.setInt(2, customerOrder.getShippingAddressID());
-            preparedStatement.setInt(3, customerOrder.getBillingAddressID());
-            preparedStatement.setDate(4, new java.sql.Date(customerOrder.getCustomerOrderDate().getTime()));
-            preparedStatement.setString(5, customerOrder.getCustomerOrderStatus());
-            preparedStatement.setInt(6, customerOrder.getCustomerOrderID());
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0;
-
-        } catch (SQLException e) {
-            handleSQLException(e);
-            return false;
-        }
-    }
-
-    // Delete customer order by ID
-    public boolean deleteCustomerOrder(int customerOrderID) {
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement("DELETE FROM CustomerOrder WHERE CustomerOrderID=?")) {
-
-            preparedStatement.setInt(1, customerOrderID);
+            preparedStatement.setDate(2, new java.sql.Date(customerOrder.getCustomerOrderDate().getTime()));
+            preparedStatement.setString(3, customerOrder.getCustomerOrderStatus());
+            preparedStatement.setString(4, customerOrder.getPaymentID());
+            preparedStatement.setInt(5, customerOrder.getCustomerOrderID());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -102,9 +80,7 @@ public class CustomerOrderDAO {
     public List<CustomerOrder> getAllCustomerOrders() {
         List<CustomerOrder> customerOrderList = new ArrayList<>();
 
-        try (Connection con = connectionManager.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM CustomerOrder");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM CustomerOrder"); ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 CustomerOrder customerOrder = mapResultSetToCustomerOrder(resultSet);
@@ -123,10 +99,9 @@ public class CustomerOrderDAO {
         CustomerOrder customerOrder = new CustomerOrder();
         customerOrder.setCustomerOrderID(resultSet.getInt("CustomerOrderID"));
         customerOrder.setCustomerID(resultSet.getInt("CustomerID"));
-        customerOrder.setShippingAddressID(resultSet.getInt("ShippingAddressID"));
-        customerOrder.setBillingAddressID(resultSet.getInt("BillingAddressID"));
         customerOrder.setCustomerOrderDate(resultSet.getDate("CustomerOrderDate"));
         customerOrder.setCustomerOrderStatus(resultSet.getString("CustomerOrderStatus"));
+        customerOrder.setPaymentID(resultSet.getString("PaymentID"));
         return customerOrder;
     }
 
@@ -135,4 +110,46 @@ public class CustomerOrderDAO {
         // Log or handle the exception as needed
         e.printStackTrace();
     }
+
+    // Retrieve customer order ID by PaymentID
+    public int getCustomerOrderIDByPaymentID(String paymentID) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT CustomerOrderID FROM CustomerOrder WHERE PaymentID = ?")) {
+
+            preparedStatement.setString(1, paymentID);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("CustomerOrderID");
+                }
+            }
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+
+        return -1;
+    }
+
+    // Retrieve all customer orders by CustomerID
+    public List<CustomerOrder> getAllCustomerOrdersByCustomerID(int customerID) {
+        List<CustomerOrder> customerOrderList = new ArrayList<>();
+
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM CustomerOrder WHERE CustomerID = ?")) {
+
+            preparedStatement.setInt(1, customerID);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    CustomerOrder customerOrder = mapResultSetToCustomerOrder(resultSet);
+                    customerOrderList.add(customerOrder);
+                }
+            }
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+
+        return customerOrderList;
+    }
+
 }

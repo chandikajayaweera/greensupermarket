@@ -7,22 +7,22 @@ public class CustomerOrder {
     private int customerOrderID;
     private int customerID;
     private int shippingAddressID;
-    private int billingAddressID;
     private Date customerOrderDate;
     private String customerOrderStatus;
+    private String paymentID;
 
     // Default constructor
     public CustomerOrder() {
     }
 
     // Parameterized constructor
-    public CustomerOrder(int customerOrderID, int customerID, int shippingAddressID, int billingAddressID, Date customerOrderDate, String customerOrderStatus) {
+    public CustomerOrder(int customerOrderID, int customerID, int shippingAddressID, Date customerOrderDate, String customerOrderStatus, String paymentID) {
         this.customerOrderID = customerOrderID;
         this.customerID = customerID;
         this.shippingAddressID = shippingAddressID;
-        this.billingAddressID = billingAddressID;
         this.customerOrderDate = customerOrderDate;
         this.customerOrderStatus = customerOrderStatus;
+        this.paymentID = paymentID;
     }
 
     // Getters and setters
@@ -50,14 +50,6 @@ public class CustomerOrder {
         this.shippingAddressID = shippingAddressID;
     }
 
-    public int getBillingAddressID() {
-        return billingAddressID;
-    }
-
-    public void setBillingAddressID(int billingAddressID) {
-        this.billingAddressID = billingAddressID;
-    }
-
     public Date getCustomerOrderDate() {
         return customerOrderDate;
     }
@@ -74,6 +66,14 @@ public class CustomerOrder {
         this.customerOrderStatus = customerOrderStatus;
     }
 
+    public String getPaymentID() {
+        return paymentID;
+    }
+
+    public void setPaymentID(String paymentID) {
+        this.paymentID = paymentID;
+    }
+
     // toString method for debugging or logging
     @Override
     public String toString() {
@@ -81,9 +81,9 @@ public class CustomerOrder {
                 "customerOrderID=" + customerOrderID +
                 ", customerID=" + customerID +
                 ", shippingAddressID=" + shippingAddressID +
-                ", billingAddressID=" + billingAddressID +
                 ", customerOrderDate=" + customerOrderDate +
                 ", customerOrderStatus='" + customerOrderStatus + '\'' +
+                ", paymentID='" + paymentID + '\'' +
                 '}';
     }
 }

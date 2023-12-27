@@ -19,7 +19,6 @@
         Object cart = session.getAttribute("cart");
         if (cart != null && cart instanceof ArrayList && !((ArrayList<?>) cart).isEmpty()) { 
     %>
-
     <h1 class="is-size-3 has-text-weight-bold">Your cart</h1>
     <table border="1">
         <thead>
