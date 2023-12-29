@@ -54,6 +54,14 @@
             <version>1.14.0</version>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api -->
+
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>

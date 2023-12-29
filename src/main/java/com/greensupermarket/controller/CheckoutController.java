@@ -12,12 +12,14 @@ import com.greensupermarket.service.CustomerOrderService;
 import com.greensupermarket.service.ShippingDetailsService;
 import com.greensupermarket.service.OrderItemService;
 import com.greensupermarket.service.ProductService;
+import com.greensupermarket.service.EmailService;
 
 import com.greensupermarket.util.PaymentManager;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import jakarta.mail.MessagingException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -30,6 +32,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "CheckoutController", urlPatterns = {"/checkout"})
 public class CheckoutController extends HttpServlet {
@@ -44,7 +48,7 @@ public class CheckoutController extends HttpServlet {
     private final OrderItemService orderItemService;
     private final ProductService productService;
 
-    public CheckoutController() {
+    public CheckoutController(){
         this.paymentManager = new PaymentManager();
         this.customerService = new CustomerService();
         this.customerOrder = new CustomerOrder();
@@ -149,57 +153,63 @@ public class CheckoutController extends HttpServlet {
     }
 
     public void success(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        Customer customer = (Customer) session.getAttribute("customer");
-        Cart cart = (Cart) session.getAttribute("cart");
-
-        LocalDateTime customerOrderDateTime = LocalDateTime.now();
-        Date customerOrderDate = Date.from(customerOrderDateTime.atZone(ZoneId.systemDefault()).toInstant());
-
-        Payment payment = paymentManager.getPaymentDetails(request.getParameter("paymentId"));
-        PayerInfo payerInfo = payment.getPayer().getPayerInfo();
-        String recipientName = payerInfo.getFirstName() + " " + payerInfo.getLastName();
-        Address address = payment.getPayer().getPayerInfo().getShippingAddress();
-
-        customerOrder.setCustomerID(customer.getCustomerID());
-        customerOrder.setPaymentID(request.getParameter("paymentId"));
-        customerOrder.setCustomerOrderStatus("Processing");
-        customerOrder.setCustomerOrderDate(customerOrderDate);
-        customerOrderService.createCustomerOrder(customerOrder);
-
-        int customerOrderID = customerOrderService.getCustomerOrderIDByPaymentID(request.getParameter("paymentId"));
-
-        shippingDetails.setRecipientName(recipientName);
-        shippingDetails.setLine1(address.getLine1());
-        shippingDetails.setLine2(address.getLine2());
-        shippingDetails.setCity(address.getCity());
-        shippingDetails.setState(address.getState());
-        shippingDetails.setCountryCode(address.getCountryCode());
-        shippingDetails.setPostalCode(address.getPostalCode());
-        shippingDetailsService.createShippingDetails(shippingDetails, customerOrderID);
-
-        for (var orderitem : cart.getOrderItems()) {
-
-            OrderItem orderItem = new OrderItem();
-
-            orderItem.setCustomerOrderID(customerOrderID);
-            orderItem.setProductID(orderitem.getProductID());
-            orderItem.setOrderItemQuantity(orderitem.getOrderItemQuantity());
-            orderItem.setOrderItemUnitPrice(orderitem.getOrderItemUnitPrice());
-            orderItemService.addOrderItem(orderItem);
-
-            Product product = productService.getProductByID(orderitem.getProductID());
-            int stock = product.getProductStock();
-            stock -= orderitem.getOrderItemQuantity();
-            product.setProductStock(stock);
-            productService.updateProductStock(product);
-
-            
-        }
         
-        session.removeAttribute("cart");
-        session.setAttribute("customerorderid", customerOrderID);
-        response.sendRedirect("success.jsp");
-        return;
+        try {
+            Customer customer = (Customer) session.getAttribute("customer");
+            Cart cart = (Cart) session.getAttribute("cart");
+            
+            LocalDateTime customerOrderDateTime = LocalDateTime.now();
+            Date customerOrderDate = Date.from(customerOrderDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            
+            Payment payment = paymentManager.getPaymentDetails(request.getParameter("paymentId"));
+            PayerInfo payerInfo = payment.getPayer().getPayerInfo();
+            String recipientName = payerInfo.getFirstName() + " " + payerInfo.getLastName();
+            Address address = payment.getPayer().getPayerInfo().getShippingAddress();
+            
+            customerOrder.setCustomerID(customer.getCustomerID());
+            customerOrder.setPaymentID(request.getParameter("paymentId"));
+            customerOrder.setCustomerOrderStatus("Processing");
+            customerOrder.setCustomerOrderDate(customerOrderDate);
+            customerOrderService.createCustomerOrder(customerOrder);
+            
+            int customerOrderID = customerOrderService.getCustomerOrderIDByPaymentID(request.getParameter("paymentId"));
+            
+            shippingDetails.setRecipientName(recipientName);
+            shippingDetails.setLine1(address.getLine1());
+            shippingDetails.setLine2(address.getLine2());
+            shippingDetails.setCity(address.getCity());
+            shippingDetails.setState(address.getState());
+            shippingDetails.setCountryCode(address.getCountryCode());
+            shippingDetails.setPostalCode(address.getPostalCode());
+            shippingDetailsService.createShippingDetails(shippingDetails, customerOrderID);
+            
+            for (var orderitem : cart.getOrderItems()) {
+                
+                OrderItem orderItem = new OrderItem();
+                
+                orderItem.setCustomerOrderID(customerOrderID);
+                orderItem.setProductID(orderitem.getProductID());
+                orderItem.setOrderItemQuantity(orderitem.getOrderItemQuantity());
+                orderItem.setOrderItemUnitPrice(orderitem.getOrderItemUnitPrice());
+                orderItemService.addOrderItem(orderItem);
+                
+                Product product = productService.getProductByID(orderitem.getProductID());
+                int stock = product.getProductStock();
+                stock -= orderitem.getOrderItemQuantity();
+                product.setProductStock(stock);  
+                productService.updateProductStock(product);
+            }
+            
+            EmailService emailService = new EmailService();
+            emailService.sendEmail(customer.getCustomerEmail(), "Your order has been placed", "Thank you");
+            
+            session.removeAttribute("cart");
+            session.setAttribute("customerorderid", customerOrderID);
+            response.sendRedirect("success.jsp");
+            return;
+            
+        } catch (MessagingException ex) {
+            Logger.getLogger(CheckoutController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
