@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @MultipartConfig
 @WebServlet(name = "BackendController", urlPatterns = {"/backend/controller"})
@@ -24,6 +25,9 @@ public class BackendController extends HttpServlet {
     private CustomerService customerService;
     private ProductService productService;
     private FeedbackService feedbackService;
+    private CustomerOrderService customerOrderService;
+    private ShippingDetailsService shippingDetailsService;
+    private OrderItemService orderItemService;
 
     // Models
     private Employee employee;
@@ -42,6 +46,9 @@ public class BackendController extends HttpServlet {
         this.customerService = new CustomerService();
         this.productService = new ProductService();
         this.feedbackService = new FeedbackService();
+        this.customerOrderService = new CustomerOrderService();
+        this.shippingDetailsService = new ShippingDetailsService();
+        this.orderItemService = new OrderItemService();
 
         // Models
         this.employee = new Employee();
@@ -52,7 +59,7 @@ public class BackendController extends HttpServlet {
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         boolean isLogged = authenticateSession(session, request, response);
 
@@ -61,7 +68,7 @@ public class BackendController extends HttpServlet {
             return;
         }
         if (request.getParameter("action") == null) {
-            response.sendRedirect("dashboard.jsp");
+            categories(session, request, response);
             return;
         }
 
@@ -81,11 +88,23 @@ public class BackendController extends HttpServlet {
                 session.setAttribute("customers", customerService.getAllCustomers());
                 response.sendRedirect("customers.jsp");
                 return;
+ 
             case "products":
                 session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
                 session.setAttribute("products", productService.getAllProducts());
                 response.sendRedirect("products.jsp");
                 return;
+                
+            case "updateproduct":
+                if(productService.getProductByID(Integer.parseInt(request.getParameter("productid"))) == null){
+                    response.sendRedirect("controller?action=products");
+                    return;
+                }
+                session.setAttribute("product", productService.getProductByID(Integer.parseInt(request.getParameter("productid"))));
+                session.setAttribute("subcategories", subCategoryService.getAllSubCategories());
+                response.sendRedirect("updateproduct.jsp");
+                return;
+                
             case "customerfeedback":
                 session.setAttribute("feedback", feedbackService.getAllFeedbacks());
                 response.sendRedirect("feedback.jsp");
@@ -93,6 +112,22 @@ public class BackendController extends HttpServlet {
             case "employees":
                 session.setAttribute("employees", employeeService.getAllEmployees());
                 response.sendRedirect("employees.jsp");
+                return;
+            
+            case "updateemployee":
+                if(employeeService.getEmployeeById(Integer.parseInt(request.getParameter("employeeid"))) == null){
+                    response.sendRedirect("controller?action=employees");
+                }
+                session.setAttribute("employeeinfo", employeeService.getEmployeeById(Integer.parseInt(request.getParameter("employeeid"))));
+                response.sendRedirect("updateemployee.jsp");
+                return;
+                
+            case "customerorders":
+                session.setAttribute("customerorders", customerOrderService.getAllCustomerOrders());
+                response.sendRedirect("customerorders.jsp");
+                return;
+            case "invoice":
+                invoice(session, request, response);
                 return;
         }
 
@@ -108,7 +143,8 @@ public class BackendController extends HttpServlet {
             return;
         }
         if (request.getParameter("action") == null) {
-            response.sendRedirect("dashboard.jsp");
+            categories(session, request, response);
+            return;
         }
 
         String action = request.getParameter("action");
@@ -131,6 +167,9 @@ public class BackendController extends HttpServlet {
                 return;
             case "employees":
                 employees(session, request, response);
+                return;
+            case "customerorders":
+                customerorders(session, request, response);
                 return;
         }
     }
@@ -231,9 +270,6 @@ public class BackendController extends HttpServlet {
                 customerService.addCustomer(customer);
                 session.setAttribute("customers", customerService.getAllCustomers());
                 response.sendRedirect("customers.jsp");
-                return;
-
-            case "update":
                 return;
 
             case "delete":
@@ -343,6 +379,7 @@ public class BackendController extends HttpServlet {
                 employee.setEmployeeEmail(request.getParameter("employeeemail"));
                 employee.setEmployeePassword(request.getParameter("employeepassword"));
                 employeeService.updateEmployee(employee);
+                session.removeAttribute("employeeinfo");
                 session.setAttribute("employees", employeeService.getAllEmployees());
                 response.sendRedirect("employees.jsp");
                 return;
@@ -356,4 +393,64 @@ public class BackendController extends HttpServlet {
         }
         
     }
+
+    
+    private void customerorders(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        PrintWriter out = response.getWriter();
+        
+        if (request.getParameter("query") == null) {
+            response.sendRedirect("controller?action=customerorders");
+            return;
+        }
+        
+        String query = request.getParameter("query");
+        
+        switch(query){
+            case "orderstatus":
+                if(request.getParameter("orderstatus") == null || request.getParameter("orderid") == null){
+                    response.sendRedirect("controller?action=customerorders");
+                }
+                CustomerOrder customerOrder = new CustomerOrder();
+                customerOrder.setCustomerOrderID(Integer.parseInt(request.getParameter("orderid")));
+                customerOrder.setCustomerOrderStatus(request.getParameter("orderstatus"));
+                customerOrderService.updateCustomerOrderStatus(customerOrder);
+                response.sendRedirect("controller?action=customerorders");
+                return;
+        }
+    }
+    
+    private void invoice(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        String orderidparam = request.getParameter("orderid");
+        
+        if (orderidparam == null) {
+            response.sendRedirect("controller?action=orders");
+            return;
+        }
+
+        int orderid = Integer.parseInt(orderidparam);
+        
+        Customer customer = customerService.getCustomerByID(customerOrderService.getCustomerIDByOrderID(orderid));
+
+        session.setAttribute("customerinfo", customer);
+        
+        CustomerOrder customerOrder = customerOrderService.getCustomerOrderById(orderid);
+        session.setAttribute("customerorder", customerOrder);
+        
+        List<ShippingDetails> shippingDetails = shippingDetailsService.getShippingDetailsByCustomerOrderID(orderid);
+        session.setAttribute("shippingdetails", shippingDetails);
+        
+        List<OrderItem> orderItems = orderItemService.getAllOrderItemsByOrderId(orderid);
+        session.setAttribute("orderitems", orderItems);
+        
+        for (OrderItem orderItem : orderItems) {
+            Product product = new Product();
+            product = productService.getProductByID(orderItem.getProductID());
+            orderItem.setProductName(product.getProductName());
+            orderItem.setProductImageURL(product.getProductImageURL());
+        }
+        
+        response.sendRedirect("invoice.jsp");
+        return;
+    }
+    
 }

@@ -68,7 +68,7 @@ public class EmployeeLoginController extends HttpServlet {
         String password = request.getParameter("password");
         if (employeeService.authenticateEmployee(email, password)) {
             session.setAttribute("employee", employeeService.getEmployeeByEmail(email));
-            response.sendRedirect("dashboard.jsp");
+            response.sendRedirect("controller?action=categories");
             return;
         }
         response.sendRedirect("login.jsp");

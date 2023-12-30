@@ -197,7 +197,6 @@ public class CustomerController extends HttpServlet {
     }
 
     private void invoice(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
 
         String orderidparam = request.getParameter("orderid");
 

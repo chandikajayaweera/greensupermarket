@@ -76,6 +76,23 @@ public class CustomerOrderDAO {
         }
     }
 
+    // Update customer order status
+    public boolean updateCustomerOrderStatus(CustomerOrder customerOrder) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(
+                "UPDATE CustomerOrder SET CustomerOrderStatus=? WHERE CustomerOrderID=?")) {
+
+            preparedStatement.setString(1, customerOrder.getCustomerOrderStatus());
+            preparedStatement.setInt(2, customerOrder.getCustomerOrderID());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+            return false;
+        }
+    }
+
     // Get all customer orders
     public List<CustomerOrder> getAllCustomerOrders() {
         List<CustomerOrder> customerOrderList = new ArrayList<>();
@@ -150,6 +167,24 @@ public class CustomerOrderDAO {
         }
 
         return customerOrderList;
+    }
+
+    public int getCustomerIDByOrderID(int orderID) {
+        try (Connection con = connectionManager.getConnection(); PreparedStatement preparedStatement = con.prepareStatement("SELECT CustomerID FROM CustomerOrder WHERE CustomerOrderID = ?")) {
+
+            preparedStatement.setInt(1, orderID);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("CustomerID"); // Corrected column name
+                }
+            }
+
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+
+        return -1;
     }
 
 }

@@ -27,6 +27,10 @@ public class CustomerOrderService {
         // Perform any additional business logic, validation, etc. before updating the order
         return customerOrderDAO.updateCustomerOrder(customerOrder);
     }
+    
+    public boolean updateCustomerOrderStatus(CustomerOrder customerOrder){
+        return customerOrderDAO.updateCustomerOrderStatus(customerOrder);
+    }
 
     public List<CustomerOrder> getAllCustomerOrders() {
         // Perform any additional business logic, validation, etc. before retrieving all orders
@@ -35,6 +39,10 @@ public class CustomerOrderService {
     
     public int getCustomerOrderIDByPaymentID(String paymentID){
         return customerOrderDAO.getCustomerOrderIDByPaymentID(paymentID);
+    }
+    
+    public int getCustomerIDByOrderID(int orderID){
+        return customerOrderDAO.getCustomerIDByOrderID(orderID);
     }
     
     public List<CustomerOrder> getAllCustomerOrdersByCustomerID(int customerID){

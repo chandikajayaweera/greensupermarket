@@ -23,86 +23,76 @@
             }
         %> 
         <div id="container">
-            <div id="sidebar">
-                <ul>
-                    <li><font size="30"><a href="dashboard.jsp"><b>Dash</b></a></font></li>
-                    <li><a href="controller?action=categories">Categories</a></li>
-                    <li><a href="controller?action=subcategories">Sub Categories</a></li>
-                    <li><a href="controller?action=products">Products</a></li>
-                    <li><a href="controller?action=customers">Customers</a></li>
-                    <li><a href="controller?action=customerorders">Customer Orders</a></li>
-                    <li><a href="controller?action=customerfeedback">Customer Feedback</a></li>
-                    <li><a href="controller?action=employees">Employees</a></li>
-                </ul>
-            </div>
-            <div id="content">
-                <h1>Customer Page</h1>
-
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>Customer ID</th>
-                            <th>Customer Fname</th>
-                            <th>Customer Lname</th>
-                            <th>Customer email</th>
-                            <th>Customer Pnumber</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="customer" items="${customers}">
-                            <tr>
-                                <td>${customer.customerID}</td>
-                                <td>${customer.customerFname}</td>
-                                <td>${customer.customerLname}</td>
-                                <td>${customer.customerEmail}</td>
-                                <td>${customer.customerPnumber}</td>
-                                <td><form action="controller?action=customers&query=delete&customerid=${customer.customerID}" method="POST">
-                                        <button type="submit">Delete</button>
-                                    </form>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-
-                <br><br>
-
-                <!-- Add customers -->
-                <table>
-                    <form action='controller' method="POST">
-                        <input type="hidden" name="action" value="customers">
-                        <input type="hidden" name="query" value="add">
-                        <tr>
-                            <td colspan="2"><h2>Add customer</h2></td>
-                        </tr>
-                        <tr>
-                            <td>First name:</td>
-                            <td><input type="text" name="customerfname"></td>
-                        </tr>
-                        <tr>
-                            <td>Last name:</td>
-                            <td><input type="text" name="customerlname"></td>
-                        </tr>
-                        <tr>
-                            <td>Email address:</td>
-                            <td><input type="email" name="customeremail"></td>
-                        </tr>
-                        <tr>
-                            <td>Phone number:</td>
-                            <td><input type="tel" name="customerpnumber"></td>
-                        </tr>
-                        <tr>
-                            <td>Password:</td>
-                            <td><input type="password" name="customerpassword"></td>
-                        </tr>
-                        <tr>
-                            <td><button type="submit">Submit</button></td>
-                        </tr>
-                    </form> 
-                </table>
+            <!-- =============== Navigation ================ -->
+            <jsp:include page="../template/backend/navbar.jsp"/>
 
 
+            <!-- ========================= Main ==================== -->
+            <div class="main">
+                <div class="topbar">
+                    <div class="toggle">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </div>
+                    <div>
+                        <h2>${employee.roleName} | ${employee.employeeFname} ${employee.employeeLname} </h2>
+                    </div>
+
+                    <div>
+                        <button onclick="location.href = 'login?action=logout'">Logout</button>
+                    </div> 
+                </div>
+
+                <!-- ======================= Cards ================== -->
+                <div class="cardBox">
+                    <div class="card">
+                        <div>
+                            <div class="cardName">Customers</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================ Customer Details List ================= -->
+                <div class="details">
+                    <div class="recentOrders"> <!-- Ignore the div class name -->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Customer ID</td>
+                                    <td>Customer Fname</td>
+                                    <td>Customer Lname</td>
+                                    <td>Customer email</td>
+                                    <td>Customer Phone number</td>
+                                    <td>Delete</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="customer" items="${customers}">
+                                    <tr>
+                                        <td>${customer.customerID}</td>
+                                        <td>${customer.customerFname}</td>
+                                        <td>${customer.customerLname}</td>
+                                        <td>${customer.customerEmail}</td>
+                                        <td>${customer.customerPnumber}</td>
+                                        <td>
+                                            <form action="controller?action=customers&query=delete&customerid=${customer.customerID}" method="POST">
+                                                <button type="submit">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- =========== Scripts =========  -->
+        <script src="../resources/js/main.js"></script>
+
+        <!-- ====== ionicons ======= -->
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
     </body>
 </html>

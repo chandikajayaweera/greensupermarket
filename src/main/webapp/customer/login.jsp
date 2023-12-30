@@ -16,24 +16,33 @@
             response.setHeader("Expires", "0"); 
         %>
         <jsp:include page="../template/frontend/navbar.jsp"/>
-        <h1>Customer Login Portal</h1>
+
         <form action="login" method="POST">
             <input type="hidden" name="action" value="login">
-            <table>
-                <tr>
-                    <td>Customer Email:</td>
-                    <td><input type="email" name="customeremail"></td>
-                </tr>
-                <tr>
-                    <td>Password:</td>
-                    <td><input type="password" name="customerpassword"></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input type="submit" value="Login"></td>
-                </tr>
-            </table>
+            <div class="hero is-fullheight">
+                <div class="hero-body is-justify-content-center is-align-items-center">
+                    <div class="columns is-flex is-flex-direction-column box">
+                        <div class="column has-text-centered">
+                            <h1 class="title has-text-primary">Customer Login Portal</h1>
+                        </div>
+                        <div class="column">
+                            <label for="email">Email</label>
+                            <input class="input is-primary" type="email" name="customeremail" placeholder="Email address">
+                        </div>
+                        <div class="column">
+                            <label for="Name">Password</label>
+                            <input class="input is-primary" type="password" name="customerpassword" placeholder="Password">
+                        </div>
+                        <div class="column">
+                            <button class="button is-primary is-fullwidth" type="submit">Login</button>
+                        </div>
+                        <div class="has-text-centered">
+                            <p class="is-size-7"> Don't have an account? <a href="signup.jsp" class="has-text-primary">Sign up</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
-        
-        <h3><a href="signup.jsp">Signup</a></h3>
     </body>
 </html>
