@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="resources/css/bulma.min.css"/>
         <title>Product details</title>
     </head>
-    <body>
+    <body class="has-background-primary-light">
         <%
         if(session.getAttribute("product") == null){
             response.sendRedirect("controller?action=index");
@@ -19,7 +19,7 @@
         <jsp:include page="template/frontend/navbar.jsp"/>
 
         <!-- product info -->
-        <section class="section">
+        <section class="section hero is-fullheight">
             <div class="container">
                 <div class="columns is-vcentered is-multiline">
                     <div class="column is-6-tablet is-3-desktop">
@@ -28,7 +28,7 @@
                         <p>${product.productDescription}</p>
                     </div>
                     <div class="column is-6-tablet is-5-desktop has-text-centered">
-                        <img src="${product.productImageURL}" alt="docker coffee image" class="px-6">
+                        <img src="${product.productImageURL}" alt="product image" class="px-6">
                     </div>
                     <div class="column is-12-tablet is-4-desktop">
                         <div class="is-size-4 mb-4">Rs. ${product.productUnitPrice}</div>

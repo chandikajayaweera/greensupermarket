@@ -61,7 +61,7 @@ public class CustomerLoginController extends HttpServlet {
 
         if (customerService.authenticateCustomer(email, password)) {
             session.setAttribute("customer", customerService.getCustomerByEmail(email));
-            response.sendRedirect("dashboard.jsp");
+            response.sendRedirect("controller?action=orders");
             return;
         }
         response.sendRedirect("login.jsp");
@@ -82,7 +82,7 @@ public class CustomerLoginController extends HttpServlet {
         customer.setCustomerPasswordHash(request.getParameter("customerpassword"));
         customerService.addCustomer(customer);
         session.setAttribute("customer", customerService.getCustomerByEmail(request.getParameter("customeremail")));
-        response.sendRedirect("dashboard.jsp");
+        response.sendRedirect("controller?action=orders");
         return;
     }
 

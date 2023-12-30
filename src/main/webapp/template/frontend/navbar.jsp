@@ -29,7 +29,7 @@
             %>
                 <!-- Show My Account and Shopping Cart links -->
                 <a href="<c:url value='/cart?action=viewcart'/>" class="navbar-item">Shopping Cart</a>
-                <a href="<c:url value='/customer/dashboard.jsp'/>" class="navbar-item">My Account</a>
+                <a href="<c:url value='/customer/controller?action=orders'/>" class="navbar-item">My Account</a>
             <%
                 }
             %>

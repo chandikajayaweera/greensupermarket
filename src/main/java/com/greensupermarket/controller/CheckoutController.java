@@ -48,7 +48,7 @@ public class CheckoutController extends HttpServlet {
     private final OrderItemService orderItemService;
     private final ProductService productService;
 
-    public CheckoutController(){
+    public CheckoutController() {
         this.paymentManager = new PaymentManager();
         this.customerService = new CustomerService();
         this.customerOrder = new CustomerOrder();
@@ -153,27 +153,27 @@ public class CheckoutController extends HttpServlet {
     }
 
     public void success(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+
         try {
             Customer customer = (Customer) session.getAttribute("customer");
             Cart cart = (Cart) session.getAttribute("cart");
-            
+
             LocalDateTime customerOrderDateTime = LocalDateTime.now();
             Date customerOrderDate = Date.from(customerOrderDateTime.atZone(ZoneId.systemDefault()).toInstant());
-            
+
             Payment payment = paymentManager.getPaymentDetails(request.getParameter("paymentId"));
             PayerInfo payerInfo = payment.getPayer().getPayerInfo();
             String recipientName = payerInfo.getFirstName() + " " + payerInfo.getLastName();
             Address address = payment.getPayer().getPayerInfo().getShippingAddress();
-            
+
             customerOrder.setCustomerID(customer.getCustomerID());
             customerOrder.setPaymentID(request.getParameter("paymentId"));
             customerOrder.setCustomerOrderStatus("Processing");
             customerOrder.setCustomerOrderDate(customerOrderDate);
             customerOrderService.createCustomerOrder(customerOrder);
-            
+
             int customerOrderID = customerOrderService.getCustomerOrderIDByPaymentID(request.getParameter("paymentId"));
-            
+
             shippingDetails.setRecipientName(recipientName);
             shippingDetails.setLine1(address.getLine1());
             shippingDetails.setLine2(address.getLine2());
@@ -182,32 +182,46 @@ public class CheckoutController extends HttpServlet {
             shippingDetails.setCountryCode(address.getCountryCode());
             shippingDetails.setPostalCode(address.getPostalCode());
             shippingDetailsService.createShippingDetails(shippingDetails, customerOrderID);
-            
+
             for (var orderitem : cart.getOrderItems()) {
-                
+
                 OrderItem orderItem = new OrderItem();
-                
+
                 orderItem.setCustomerOrderID(customerOrderID);
                 orderItem.setProductID(orderitem.getProductID());
                 orderItem.setOrderItemQuantity(orderitem.getOrderItemQuantity());
                 orderItem.setOrderItemUnitPrice(orderitem.getOrderItemUnitPrice());
                 orderItemService.addOrderItem(orderItem);
-                
+
                 Product product = productService.getProductByID(orderitem.getProductID());
                 int stock = product.getProductStock();
                 stock -= orderitem.getOrderItemQuantity();
-                product.setProductStock(stock);  
+                product.setProductStock(stock);
                 productService.updateProductStock(product);
             }
-            
+
+            StringBuilder emailContent = new StringBuilder();
+            emailContent.append("Your order has been placed.\n\n");
+
+            for (var orderitem : cart.getOrderItems()) {
+                Product product = productService.getProductByID(orderitem.getProductID());
+
+                emailContent.append("Product: ").append(product.getProductName()).append("\n");
+                emailContent.append("Quantity: ").append(orderitem.getOrderItemQuantity()).append("\n");
+                emailContent.append("Unit Price: ").append(orderitem.getOrderItemUnitPrice()).append("\n");
+                emailContent.append("\n\n");
+            }
+
+            emailContent.append("Thank you for shopping with us!");
+
             EmailService emailService = new EmailService();
-            emailService.sendEmail(customer.getCustomerEmail(), "Your order has been placed", "Thank you");
-            
+            emailService.sendEmail(customer.getCustomerEmail(), "Your order has been placed", emailContent.toString());
+
             session.removeAttribute("cart");
             session.setAttribute("customerorderid", customerOrderID);
             response.sendRedirect("success.jsp");
             return;
-            
+
         } catch (MessagingException ex) {
             Logger.getLogger(CheckoutController.class.getName()).log(Level.SEVERE, null, ex);
         }

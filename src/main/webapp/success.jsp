@@ -29,9 +29,20 @@
             }
         %>
         <jsp:include page="template/frontend/navbar.jsp"/>
-        <h1>Payment Completed</h1>
-        Order ID: ${customerorderid}
-        <br><br>
-        <button onclick="location.href = 'customer/controller?action=invoice&orderid=${customerorderid}'" class="button is-primary is-size-6">View invoice</button>
+        <div class="hero is-fullheight has-background-primary-light">
+            <div class="hero-body is-justify-content-center is-align-items-center">
+                <div class="columns is-flex is-flex-direction-column box">
+                    <div class="column has-text-centered">
+                        <h1 class="is-size-4">Your order has been placed!</h1>
+                    </div>
+                    <div class="column has-text-centered">
+                        <h1>Order ID: ${customerorderid}</h1>
+                    </div>
+                    <div class="column has-text-centered">
+                        <h1><button onclick="location.href = 'customer/controller?action=invoice&orderid=${customerorderid}'" class="button is-primary is-size-6">View invoice</button></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

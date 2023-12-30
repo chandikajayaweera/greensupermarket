@@ -76,7 +76,7 @@ public class CustomerController extends HttpServlet {
             return;
         }
         if (request.getParameter("action") == null) {
-            response.sendRedirect("dashboard.jsp");
+            response.sendRedirect("controller?action=orders");
         }
 
         String action = request.getParameter("action");
@@ -108,7 +108,7 @@ public class CustomerController extends HttpServlet {
             return;
         }
         if (request.getParameter("action") == null) {
-            response.sendRedirect("dashboard.jsp");
+            response.sendRedirect("controller?action=orders");
         }
 
         String action = request.getParameter("action");

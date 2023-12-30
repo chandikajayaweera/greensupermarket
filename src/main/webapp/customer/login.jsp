@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="../resources/css/bulma.min.css"/>
-        <title>Customer Login Portal</title>
+        <title>Customer Login</title>
     </head>
     <body>
         <%
@@ -19,19 +19,19 @@
 
         <form action="login" method="POST">
             <input type="hidden" name="action" value="login">
-            <div class="hero is-fullheight">
+            <div class="hero is-fullheight has-background-primary-light">
                 <div class="hero-body is-justify-content-center is-align-items-center">
                     <div class="columns is-flex is-flex-direction-column box">
                         <div class="column has-text-centered">
-                            <h1 class="title has-text-primary">Customer Login Portal</h1>
+                            <h1 class="title has-text-primary">Customer Login</h1>
                         </div>
                         <div class="column">
                             <label for="email">Email</label>
-                            <input class="input is-primary" type="email" name="customeremail" placeholder="Email address">
+                            <input class="input is-primary" type="email" name="customeremail" placeholder="Email address" required>
                         </div>
                         <div class="column">
                             <label for="Name">Password</label>
-                            <input class="input is-primary" type="password" name="customerpassword" placeholder="Password">
+                            <input class="input is-primary" type="password" name="customerpassword" placeholder="Password" required>
                         </div>
                         <div class="column">
                             <button class="button is-primary is-fullwidth" type="submit">Login</button>

@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="resources/css/bulma.min.css"/>
         <title>JSP Page</title>
     </head>
-    <body>
+    <body class="has-background-primary-light">
         <jsp:include page="template/frontend/navbar.jsp"/>
 
         <% 
@@ -24,38 +24,42 @@
             }
         %>
 
-        <h1 class="title">Checkout page</h1>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Product name</th>
-                    <th>Product Image</th>
-                    <th>Unit price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="orderitem" items="${orderitems}">
-                    <tr>
-                        <td>${orderitem.productName}</td>
-                        <td><img src="${orderitem.productImageURL}" width="100"></td>
-                        <td>${orderitem.orderItemUnitPrice}</td>
-                        <td>${orderitem.orderItemQuantity}</td>
-                        <c:set var="productTotal" value="${orderitem.orderItemUnitPrice * orderitem.orderItemQuantity}" />
-                        <td>${productTotal}</td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-        <h2>Total: ${total}</h2>
+        <div class="container hero is-fullheight">
+            <div class="columns has-text-centered">
+                <div class="column content my-5">
+                    <h1 class="title">Checkout page</h1>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Product name</th>
+                                <th>Product Image</th>
+                                <th>Unit price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="orderitem" items="${orderitems}">
+                                <tr>
+                                    <td>${orderitem.productName}</td>
+                                    <td><img src="${orderitem.productImageURL}" width="100"></td>
+                                    <td>${orderitem.orderItemUnitPrice}</td>
+                                    <td>${orderitem.orderItemQuantity}</td>
+                                    <c:set var="productTotal" value="${orderitem.orderItemUnitPrice * orderitem.orderItemQuantity}" />
+                                    <td>${productTotal}</td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                    <h2>Total: ${total}</h2>
 
-        <br>
-        <form id="checkoutForm" action="checkout" method="POST">
-            <input type="hidden" name="total" value="${total}">
-            <input type="submit" value="Checkout" class="button is-primary">
-        </form>
-
-
+                    <br>
+                    <form id="checkoutForm" action="checkout" method="POST">
+                        <input type="hidden" name="total" value="${total}">
+                        <input type="submit" value="Checkout" class="button is-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
