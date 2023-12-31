@@ -15,3 +15,12 @@ The project follows a typical Maven project structure:
 1. Update the `database.properties`, `email.properties`, and `paypal.properties` files in `src/main/resources/config/` with your configuration.
 2. Run the SQL script in `src/main/resources/sql/SQL.sql` to set up the database.
 3. Build the project using Maven: `mvn clean install`.
+
+## Access
+
+- **Frontend**: [http://localhost:8080/greensupermarket](http://localhost:8080/greensupermarket)
+- **Employee Backend**: [http://localhost:8080/greensupermarket/backend/login.jsp](http://localhost:8080/greensupermarket/backend/login.jsp)
+
+Backend login credentials:
+- Username: admin@test.com
+- Password: admin
