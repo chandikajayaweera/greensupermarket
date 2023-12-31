@@ -78,7 +78,7 @@ public class CheckoutController extends HttpServlet {
                 return;
 
             case "failed":
-                response.sendRedirect("failed.jsp");
+                failed(session, request, response);
                 return;
         }
 
@@ -222,6 +222,19 @@ public class CheckoutController extends HttpServlet {
             response.sendRedirect("success.jsp");
             return;
 
+        } catch (MessagingException ex) {
+            Logger.getLogger(CheckoutController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void failed(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Customer customer = (Customer) session.getAttribute("customer");
+        EmailService emailService = new EmailService();
+        
+        try {
+            emailService.sendEmail(customer.getCustomerEmail(), "Your order has been cancelled", "We regret to inform you that your recent order has been cancelled.");
+            response.sendRedirect("failed.jsp");
+            return;
         } catch (MessagingException ex) {
             Logger.getLogger(CheckoutController.class.getName()).log(Level.SEVERE, null, ex);
         }
